@@ -5,7 +5,6 @@ class CartItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final String price;
-
   final int qty;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
@@ -24,112 +23,132 @@ class CartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(
+          horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(18),
       ),
-
       child: Row(
         children: [
 
-          /// IMAGE
+          // ✅ PRODUCT IMAGE
           Container(
-            width: 90,
-            height: 110,
+            height: 80,
+            width: 80,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               image: DecorationImage(
-                image: AssetImage(image),
+                image: image.isEmpty
+                    ? const AssetImage(
+                    "lib/assets/images/Man.png")
+                    : NetworkImage(image)
+                as ImageProvider,
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
 
-          /// RIGHT SIDE
+          // ✅ DETAILS
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
               children: [
 
-                /// TITLE + DELETE
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
                         title,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
+                          fontWeight:
+                          FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                    const Icon(Icons.close, color: Colors.grey)
+                    const Icon(Icons.close,
+                        color: Colors.grey),
                   ],
                 ),
 
                 const SizedBox(height: 4),
 
-                Text(subtitle,
-                    style: const TextStyle(color: Colors.grey)),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                      color: Colors.grey),
+                ),
 
                 const SizedBox(height: 12),
 
-                /// QTY + PRICE
                 Row(
                   mainAxisAlignment:
                   MainAxisAlignment.spaceBetween,
                   children: [
 
-                    /// QTY BOX
+                    // ✅ Quantity Controls
                     Container(
-                      height: 40,
+                      padding:
+                      const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color:
+                        Colors.grey.shade200,
                         borderRadius:
-                        BorderRadius.circular(10),
+                        BorderRadius.circular(
+                            10),
                       ),
                       child: Row(
                         children: [
-
-                          /// MINUS
-                          IconButton(
-                            icon: const Icon(Icons.remove),
-                            onPressed: onRemove,
+                          GestureDetector(
+                            onTap: onRemove,
+                            child: const Icon(
+                                Icons.remove,
+                                size: 18),
                           ),
-
+                          const SizedBox(width: 12),
                           Text(
-                            "$qty",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold),
+                            qty.toString(),
+                            style:
+                            const TextStyle(
+                              fontWeight:
+                              FontWeight.bold,
+                            ),
                           ),
-
-                          /// PLUS
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: onAdd,
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: onAdd,
+                            child: const Icon(
+                                Icons.add,
+                                size: 18),
                           ),
                         ],
                       ),
                     ),
 
-                    /// PRICE
+                    // ✅ Price
                     Text(
                       price,
                       style: const TextStyle(
+                        fontWeight:
+                        FontWeight.bold,
+                        fontSize: 18,
                         color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );

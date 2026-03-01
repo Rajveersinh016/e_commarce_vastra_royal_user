@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
-import '../Models/user_model.dart';
+import '../models/user_model.dart';
 
 class UserController extends GetxController{
 

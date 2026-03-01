@@ -1,13 +1,13 @@
 import 'package:e_commarce_kk/Colors/colors.dart';
-import 'package:e_commarce_kk/Models/product_model.dart';
+import 'package:e_commarce_kk/models/product_model.dart';
 import 'package:e_commarce_kk/ui/Checkout/Checkout.dart';
-import 'package:e_commarce_kk/ui/Home/Home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+import '../../Controller/cart_controller.dart';
+import '../../models/cart_model.dart';
 
 class ProductDetail extends StatefulWidget {
-  // const ProductDetail({super.key});
   final ProductModel product;
   const ProductDetail({super.key, required this.product});
 
@@ -17,204 +17,118 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
 
-
-
+  // ==============================
+  //  OLD STATIC IMAGES (REMOVED)
+  // ==============================
+  /*
   List<String> images = [
     'lib/assets/images/Man.png',
     'lib/assets/images/Shoes.png',
     'lib/assets/images/Gold.png',
   ];
+  */
 
-  PageController controller = PageController();
-  int currentindex = 0;
+  // ==============================
+  //  NEW DYNAMIC IMAGE VARIABLES
+  // ==============================
+  late List<String> images;
+  String selectedColor = "";
+  int selectedColorIndex = 0;
+
+  PageController pageController = PageController();
+  int currentIndex = 0;
 
   bool isFavorite = false;
 
-  int selectedIndex = 0;
+  // ==============================
+  // INIT STATE → LOAD FIRST COLOR
+  // ==============================
+  @override
+  void initState() {
+    super.initState();
 
-
-  List<Color> colors = [
-    Colors.black,
-    Colors.red,
-    Colors.blue,
-
-  ];
-
-
-
-  Widget Color_Item({
-    required Color color,
-    required int index,
-  }) {
-    bool selected = selectedIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-
-
-
-
-      },
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: selected ? Colors.orange : Colors.grey.shade300,
-                width: 2,
-              ),
-            ),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: color,
-              
-              child: selected
-                ? Icon(Icons.check,color: Colors.white,)
-                : null,
-
-            ),
-            
-
-
-          ),
-        ],
-      ),
-    );
+    if (widget.product.images.isNotEmpty) {
+      selectedColor = widget.product.images.keys.first;
+      images = widget.product.images[selectedColor]!;
+    } else {
+      images = [];
+    }
   }
 
 
+   String selectedSize = "";
+  final cartController = Get.find<CartController>();
 
-  int selectedSizeIndex = 0;
 
-
-  Widget Size_Item({
-    required String title,
-    required int index,
-  }) {
-    bool selected = selectedSizeIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedSizeIndex = index;
-        });
-      },
-      child: Container(
-        height: Get.height * 0.06,
-        width: Get.width * 0.20,
-        margin: EdgeInsets.only(right: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
-          borderRadius: BorderRadius.circular(10),
-          color: selected ? Colors.blueAccent : Colors.white,
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: selected ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
 
   @override
   Widget build(BuildContext context) {
+
+    // ==============================
+    //  PRICE CALCULATION
+    // ==============================
+    double finalPrice =
+        widget.product.price - widget.product.discount;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Get.back();
-        },
-            icon: Icon(Icons.keyboard_arrow_left,color: Colors.black,size: 40,)),
-        actions: [
-          Row(
-            children: [
-              IconButton(onPressed: (){}, icon:Icon(Icons.share,color: Colors.black,size: 25,)),
-              IconButton(onPressed: (){}, icon:Icon(Icons.shopping_cart,color: Colors.black,size: 25,)),
-
-            ],
-          )
-        ],
-
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(Icons.keyboard_arrow_left,
+              color: Colors.black, size: 40),
+        ),
       ),
+
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
         child: Column(
           children: [
+
+            // ==============================
+            //  REAL FIREBASE IMAGE SLIDER
+            // ==============================
             SizedBox(
               height: 250,
               child: PageView.builder(
-                controller: controller,
+                controller: pageController,
                 itemCount: images.length,
-
-                onPageChanged:(index){
+                onPageChanged: (index) {
                   setState(() {
-                    currentindex = index;
+                    currentIndex = index;
                   });
                 },
-
                 itemBuilder: (context, index) {
                   return Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
-                        image: AssetImage(images[index]),
+                        //  OLD → AssetImage
+                        // image: AssetImage(images[index]),
+
+                        //  NEW → NetworkImage
+                        image: NetworkImage(images[index]),
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    child:Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 18.0),
-                          child: IconButton(onPressed: (){
-                            setState(() {
-                              isFavorite = !isFavorite;
-                            });
-                          },
-                              icon: Icon(
-                                isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorite
-                                    ? Colors.red
-                                    : Colors.grey,
-                              )
-                          ),
-                        )
-                      ],
-                    ) ,
                   );
                 },
-
               ),
-
-
-
             ),
+
+            // ==============================
+            // DOT INDICATOR
+            // ==============================
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(images.length, (index){
+              children: List.generate(images.length, (index) {
                 return Container(
                   margin: const EdgeInsets.all(4),
-
-                  width: currentindex == index ? 14:8,
+                  width: currentIndex == index ? 14 : 8,
                   height: 8,
-
                   decoration: BoxDecoration(
-                    color: currentindex == index
+                    color: currentIndex == index
                         ? Colors.blueAccent
                         : Colors.grey,
                     borderRadius: BorderRadius.circular(10),
@@ -224,188 +138,296 @@ class _ProductDetailState extends State<ProductDetail> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(left: 18.0),
+              padding: const EdgeInsets.all(18),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  SizedBox(height: 20,),
-
-                  Row(
-                    children: [
-                      Text("Royal Wear",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-                      SizedBox(width: 110,),
-                      Column(
-                        children: [
-                          Text("₹700",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25,color: Colors.blueAccent),),
-                          Text("₹1200",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 15,color: Colors.grey,decoration: TextDecoration.lineThrough),),
-
-                        ],
-                      )
-                    ],
-                  ),
-
-                  SizedBox(height: 25,),
-                  Row(
-                    children: [
-                      Text("COLOR:",style: TextStyle(color: Colors.black,fontSize:15,fontWeight: FontWeight.bold),),
-                      SizedBox(width: 5,),
-                      Text("Royal Blue",style: TextStyle(color:Colors.grey,fontWeight: FontWeight.bold,fontSize: 15),)
-                    ],
-                  ),
-                  SizedBox(height: 15,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        spacing: 12,
-                        children: List.generate(colors.length, (index){
-                          return Color_Item(color: colors[index], index: index);
-                        }),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15,),
-
-                  Row(
-                    children: [
-                      Text("SELECT SIZE",style: TextStyle(fontWeight: FontWeight.bold),),
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child:
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Size_Item(title: 'S', index: 0),
-                        Size_Item(title: 'M', index: 1),
-                        Size_Item(title: 'L', index: 2),
-                        Size_Item(title: 'XL', index: 3),
-                        Size_Item(title: 'XXL', index: 4),
-                        Size_Item(title: 'XXXL', index: 5),
-
-
-                      ],
+                  // ==============================
+                  //  REAL PRODUCT NAME
+                  // ==============================
+                  Text(
+                    widget.product.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
+                  // ==============================
+                  // REAL DISCOUNT PRICING
+                  // ==============================
+                  Row(
+                    children: [
+
+                      Text(
+                        "₹${finalPrice.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      if (widget.product.discount > 0)
+                        Text(
+                          "₹${widget.product.price.toStringAsFixed(0)}",
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+
+                      const SizedBox(width: 10),
+
+                      if (widget.product.discount > 0)
+                        Text(
+                          "${((widget.product.discount / widget.product.price) * 100).toStringAsFixed(0)}% off",
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // ==============================
+                  //  COLOR SECTION (DYNAMIC)
+                  // ==============================
+                  const Text(
+                    "SELECT COLOR",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 12,
+                    children: widget.product.colors
+                        .asMap()
+                        .entries
+                        .map((entry) {
+
+                      int index = entry.key;
+                      var colorData = entry.value;
+
+                      Color color = Color(
+                        int.parse(
+                            colorData['hexCode']
+                                .replaceFirst('#', '0xff')),
+                      );
+
+                      bool selected =
+                          selectedColorIndex == index;
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedColorIndex = index;
+                            selectedColor =
+                            colorData['name'];
+                            images = widget.product
+                                .images[selectedColor] ??
+                                [];
+                            currentIndex = 0;
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: selected
+                                  ? Colors.orange
+                                  : Colors.grey.shade300,
+                              width: 2,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: color,
+                            child: selected
+                                ? const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                            )
+                                : null,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  //Size section
+
+                  const SizedBox(height: 10),
+
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: widget.product.sizes.entries.map((entry) {
+
+                      String size = entry.key;
+                      int stock = entry.value;
+
+                      bool selected = selectedSize == size;
+                      bool outOfStock = stock == 0;
+
+                      return GestureDetector(
+                        onTap: outOfStock
+                            ? null
+                            : () {
+                          setState(() {
+                            selectedSize = size;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 18),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: selected
+                                    ? Colors.blue
+                                    : Colors.grey),
+                            color: outOfStock
+                                ? Colors.grey.shade300
+                                : selected
+                                ? Colors.blue
+                                : Colors.white,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                size,
+                                style: TextStyle(
+                                  color: outOfStock
+                                      ? Colors.grey
+                                      : selected
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              if (outOfStock)
+                                const Text(
+                                  "Out",
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.red),
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+
+
+
+
+                  const SizedBox(height: 25),
+
+                  // ==============================
+                  // ✅ REAL DESCRIPTION
+                  // ==============================
                   Container(
-                    width: Get.width*0.900,
                     padding: const EdgeInsets.all(16),
-
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100, // light grey background
+                      color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(12),
                     ),
-
-                    child: const Text(
-                      "Crafted from premium Italian velvet, this blazer features a modern slim fit cut that perfectly balances comfort and style. The gold-tone buttons add a touch of regal elegance suitable for evening events.",
-
-                      style: TextStyle(
+                    child: Text(
+                      widget.product.description,
+                      style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.black87,
-                        height: 1.5, // line spacing
+                        height: 1.5,
                       ),
                     ),
                   ),
 
-                  SizedBox(height: 20,),
-
-
-
-
-
-
-
-
+                  const SizedBox(height: 30),
                 ],
               ),
-            )
-
-
-
-
-
+            ),
           ],
         ),
       ),
+
+      // ==============================
+      // BUY SECTION
+      // ==============================
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-
-            /// ADD TO CART BUTTON
             SizedBox(
-              height: 50,
-              width: Get.width*0.40,
-              child: Expanded(
-
-                child: OutlinedButton.icon(
-                  onPressed: () {},
-
-                  icon: const Icon(Icons.shopping_cart_outlined),
-                  label: const Text("ADD TO CART"),
-
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-
-                    side: const BorderSide(color: Colors.blue, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-
-                    foregroundColor: Colors.blue,
+              width: 150,
+              child: ElevatedButton(
+                onPressed: selectedSize.isEmpty
+                          ? null
+                          : () {
+                           Get.to(() => CheckoutScreen());
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding:
+                  EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  "BUY NOW",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(width: 12),
-
+            SizedBox(width: 10,),
 
             SizedBox(
+              width: 160,
               height: 50,
-              width: Get.width*0.45,
-              child: Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.to(
-                        () => CheckoutScreen(),
-                       transition: Transition.rightToLeft,
-                      duration: Duration(seconds: 1),
-                    );
-                  },
-
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              child: OutlinedButton.icon(
+                onPressed: selectedSize.isEmpty
+                    ? null
+                    : () {
+                  cartController.addToCart(
+                    CartModel(
+                      productModel: widget.product,
+                      selectedColor: selectedColor,
+                      selectedSize: selectedSize,
                     ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
 
-                  child: const Text(
-                    "BUY NOW",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
+
+                icon: const Icon(Icons.shopping_cart_outlined,color: Colors.blue,),
+                label: const Text("ADD TO CART",style: TextStyle(color: Colors.blue),),
               ),
-            ),
+            )
+
+
           ],
         ),
       ),
-
-
-
-
     );
-
   }
 }

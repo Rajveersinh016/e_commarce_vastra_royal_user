@@ -1,4 +1,5 @@
 import 'package:e_commarce_kk/Colors/colors.dart';
+import 'package:e_commarce_kk/Controller/cart_controller.dart';
 import 'package:e_commarce_kk/Controller/product_controller.dart';
 import 'package:e_commarce_kk/ui/Cart/add_to_cart_screen.dart';
 import 'package:e_commarce_kk/ui/Custom_Widget/Auto_scroll_widget.dart';
@@ -152,6 +153,8 @@ class _HomePageState extends State<HomePage> {
 
 
  final ProductController productController = Get.put(ProductController());
+
+  final CartController cartController = Get.put(CartController());
 
 
 

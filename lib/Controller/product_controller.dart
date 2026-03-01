@@ -1,4 +1,4 @@
-import 'package:e_commarce_kk/Models/product_model.dart';
+import 'package:e_commarce_kk/models/product_model.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
@@ -44,8 +44,8 @@ class ProductController extends GetxController {
           Map<String, dynamic>.from(e.value),
         );
       }).toList();
-      print("SNAPSHOT VALUE:");
-      print(snapshot.value);
+      // print("SNAPSHOT VALUE:");
+      // print(snapshot.value);
       /// show only selected home products
       homeProducts.value = allProducts
           .where((p) => p.homepage == true && p.active == true)
