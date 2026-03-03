@@ -1,3 +1,4 @@
+import 'package:e_commarce_kk/ui/Category/category_products_screen.dart';
 import 'package:e_commarce_kk/ui/Login/login.dart';
 import 'package:e_commarce_kk/ui/My_order/my_orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -90,9 +91,36 @@ class AppDrawer extends StatelessWidget {
 
                   drawerItem(Icons.home, "Home", selected: true),
                   drawerItem(Icons.auto_awesome, "New Arrivals"),
-                  drawerItem(Icons.man, "Men's Collection"),
-                  drawerItem(Icons.woman, "Women's Collection"),
-                  drawerItem(Icons.shopping_bag, "Accessories"),
+                  drawerItem(Icons.man, "Men's Collection",
+                    onTap:() {
+                      Get.to(
+                              () =>
+                              CategoryProductsScreen(
+                                  categoryName: "Men's Ethnic"),
+                          transition: Transition.rightToLeft,
+                          duration: Duration(seconds: 1)
+                      );
+                    },
+
+                  ),
+                  drawerItem(Icons.woman, "Women's Collection",
+                    onTap: (){
+                       Get.to(
+                           () => CategoryProductsScreen(categoryName: "Women's Ethnic"),
+                           transition: Transition.rightToLeft,
+                         duration: Duration(seconds: 1)
+                       );
+                    }
+                  ),
+                  drawerItem(Icons.shopping_bag, "Accessories",
+                    onTap: (){
+                       Get.to(
+                           () => CategoryProductsScreen(categoryName: "Accessories"),
+                           transition: Transition.rightToLeft,
+                           duration: Duration(seconds: 1),
+                       );
+                    }
+                  ),
 
                   const Divider(),
 

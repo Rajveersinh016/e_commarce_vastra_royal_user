@@ -39,7 +39,7 @@ class ProductModel {
       });
     }
 
-    // SAFE IMAGE MAP
+
     Map<String, List<String>> imageMap = {};
 
     if (data['images'] != null &&
@@ -52,7 +52,7 @@ class ProductModel {
       });
     }
 
-    // SAFE COLOR LIST
+
     List<Map<String, dynamic>> colorList = [];
 
     if (data['colors'] != null &&

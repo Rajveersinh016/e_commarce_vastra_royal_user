@@ -33,7 +33,7 @@ class CartItem extends StatelessWidget {
       child: Row(
         children: [
 
-          // ✅ PRODUCT IMAGE
+          
           Container(
             height: 80,
             width: 80,

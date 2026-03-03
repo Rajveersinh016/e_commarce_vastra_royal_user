@@ -5,10 +5,9 @@ class CartController extends GetxController {
 
   RxList<CartModel> cartItems = <CartModel>[].obs;
 
-  // ADD ITEM
+
   void addToCart(CartModel item) {
 
-    // Check if same product + size + color already exists
     int index = cartItems.indexWhere((element) =>
     element.productModel.id == item.productModel.id &&
         element.selectedSize == item.selectedSize &&
