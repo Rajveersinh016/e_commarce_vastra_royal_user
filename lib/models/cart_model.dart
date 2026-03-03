@@ -1,7 +1,8 @@
+import 'cart_product_model.dart';
 import 'product_model.dart';
 
 class CartModel {
-  final ProductModel productModel;
+  final CartProductModel productModel;
   final String selectedColor;
   final String selectedSize;
   int quantity;
@@ -19,6 +20,10 @@ class CartModel {
   Map<String, dynamic> toJson() {
     return {
       "productId": productModel.id,
+      "name": productModel.name,
+      "price": productModel.price,
+      "discount": productModel.discount,
+      "images": productModel.images,
       "color": selectedColor,
       "size": selectedSize,
       "quantity": quantity,

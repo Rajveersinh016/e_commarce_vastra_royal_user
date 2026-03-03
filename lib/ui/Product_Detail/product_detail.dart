@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../Controller/cart_controller.dart';
 import '../../models/cart_model.dart';
+import '../../models/cart_product_model.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel product;
@@ -404,9 +405,18 @@ class _ProductDetailState extends State<ProductDetail> {
                 onPressed: selectedSize.isEmpty
                     ? null
                     : () {
+
+                  final cartProduct = CartProductModel(
+                    id: widget.product.id,
+                    name: widget.product.name,
+                    price: widget.product.price,
+                    discount: widget.product.discount,
+                    images: widget.product.images,
+                  );
+
                   cartController.addToCart(
                     CartModel(
-                      productModel: widget.product,
+                      productModel: cartProduct,
                       selectedColor: selectedColor,
                       selectedSize: selectedSize,
                     ),

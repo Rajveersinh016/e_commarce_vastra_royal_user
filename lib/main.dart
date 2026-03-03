@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Get.put(UserController());
-  Get.put(CartController());
+  //Get.put(CartController());
   runApp(const MyApp());
 }
 

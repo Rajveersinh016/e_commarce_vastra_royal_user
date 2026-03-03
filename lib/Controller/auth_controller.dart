@@ -9,7 +9,9 @@ class AuthController extends GetxController{
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
 
-  String get uid => FirebaseAuth.instance.currentUser!.uid;
+  //String get uid => FirebaseAuth.instance.currentUser!.uid;
+
+  String? get uid => FirebaseAuth.instance.currentUser?.uid;
 
   var loading = false.obs;
 

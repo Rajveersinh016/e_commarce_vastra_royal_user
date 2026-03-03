@@ -86,9 +86,7 @@ class AddToCartScreen extends StatelessWidget {
       body: Column(
         children: [
 
-          // =========================
-          // CART ITEMS
-          // =========================
+
           Expanded(
             child: Obx(() {
 

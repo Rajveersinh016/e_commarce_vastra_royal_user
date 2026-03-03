@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../models/cart_model.dart';
+import '../models/cart_product_model.dart';
+import '../models/product_model.dart';
 import 'product_controller.dart';
 
 class CartController extends GetxController {
@@ -10,15 +12,16 @@ class CartController extends GetxController {
   final DatabaseReference _db =
   FirebaseDatabase.instance.ref("carts");
 
-  final String uid =
-      FirebaseAuth.instance.currentUser!.uid;
+  //final String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  String? get uid => FirebaseAuth.instance.currentUser?.uid;
 
   RxList<CartModel> cartItems = <CartModel>[].obs;
 
   @override
   void onInit() {
-    loadCart();
     super.onInit();
+    loadCart();
   }
 
   // =============================
@@ -26,36 +29,47 @@ class CartController extends GetxController {
   // =============================
   Future<void> loadCart() async {
 
+    if (uid == null) return;
+
     cartItems.clear();
 
-    final snapshot = await _db.child(uid).get();
+    final snapshot = await _db.child(uid!).get();
 
-    if (snapshot.exists) {
-      final data =
-      Map<String, dynamic>.from(snapshot.value as Map);
+    if (!snapshot.exists) return;
 
-      final productController =
-      Get.find<ProductController>();
+    final data =
+    Map<String, dynamic>.from(snapshot.value as Map);
 
-      for (var entry in data.entries) {
+    for (var entry in data.entries) {
 
-        final value =
-        Map<String, dynamic>.from(entry.value);
+      final value =
+      Map<String, dynamic>.from(entry.value);
 
-        final product = productController.allProducts
-            .firstWhere(
-              (p) => p.id == value["productId"],
-        );
-
-        cartItems.add(
-          CartModel(
-            productModel: product,
-            selectedColor: value["color"],
-            selectedSize: value["size"],
-            quantity: value["quantity"],
+      final product = CartProductModel(
+        id: value["productId"] ?? "",
+        name: value["name"] ?? "",
+        price: (value["price"] ?? 0).toDouble(),
+        discount: (value["discount"] ?? 0).toDouble(),
+        images: value["images"] != null
+            ? Map<String, List<String>>.from(
+          (value["images"] as Map).map(
+                (key, val) => MapEntry(
+              key,
+              List<String>.from(val),
+            ),
           ),
-        );
-      }
+        )
+            : {},
+      );
+
+      cartItems.add(
+        CartModel(
+          productModel: product,
+          selectedColor: value["color"],
+          selectedSize: value["size"],
+          quantity: value["quantity"],
+        ),
+      );
     }
   }
 
@@ -80,7 +94,7 @@ class CartController extends GetxController {
       cartItems.add(item);
 
       await _db
-          .child(uid)
+          .child(uid!)
           .push()
           .set(item.toJson());
     }
@@ -93,7 +107,7 @@ class CartController extends GetxController {
   // =============================
   Future<void> updateQuantity(CartModel item) async {
 
-    final snapshot = await _db.child(uid).get();
+    final snapshot = await _db.child(uid!).get();
 
     if (!snapshot.exists) return;
 
@@ -110,7 +124,7 @@ class CartController extends GetxController {
           value["size"] == item.selectedSize) {
 
         await _db
-            .child(uid)
+            .child(uid!)
             .child(entry.key)
             .update({"quantity": item.quantity});
 
@@ -126,7 +140,7 @@ class CartController extends GetxController {
 
     final item = cartItems[index];
 
-    final snapshot = await _db.child(uid).get();
+    final snapshot = await _db.child(uid!).get();
 
     if (snapshot.exists) {
 
@@ -143,7 +157,7 @@ class CartController extends GetxController {
             value["size"] == item.selectedSize) {
 
           await _db
-              .child(uid)
+              .child(uid!)
               .child(entry.key)
               .remove();
 

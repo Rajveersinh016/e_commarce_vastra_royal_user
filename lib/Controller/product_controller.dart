@@ -19,6 +19,7 @@ class ProductController extends GetxController {
 
   /// loading state
   RxBool isLoading = true.obs;
+  RxBool isProductLoaded = false.obs;
 
   RxList<ProductModel> allProducts = <ProductModel>[].obs;
   RxList<ProductModel> homeProducts = <ProductModel>[].obs;
@@ -27,6 +28,7 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     fetchProducts();
+
     super.onInit();
   }
 
@@ -51,9 +53,11 @@ class ProductController extends GetxController {
           .where((p) => p.homepage == true && p.active == true)
           .toList();
     }
+    isProductLoaded.value = true;
     print("SNAPSHOT VALUE:");
     print(snapshot.value);
     isLoading.value = false;
+
   }
 
 
