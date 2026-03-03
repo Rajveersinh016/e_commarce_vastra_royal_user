@@ -1,4 +1,4 @@
-import 'package:e_commarce_kk/models/product_model.dart';
+import 'product_model.dart';
 
 class CartModel {
   final ProductModel productModel;
@@ -7,13 +7,21 @@ class CartModel {
   int quantity;
 
   CartModel({
-   required this.productModel,
-   required this.selectedColor,
-   required this.selectedSize,
-   this.quantity = 1,
+    required this.productModel,
+    required this.selectedColor,
+    required this.selectedSize,
+    this.quantity = 1,
   });
 
   double get totalPrice =>
       (productModel.price - productModel.discount) * quantity;
 
+  Map<String, dynamic> toJson() {
+    return {
+      "productId": productModel.id,
+      "color": selectedColor,
+      "size": selectedSize,
+      "quantity": quantity,
+    };
+  }
 }
