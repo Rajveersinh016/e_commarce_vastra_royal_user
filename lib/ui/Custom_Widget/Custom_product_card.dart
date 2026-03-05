@@ -1,5 +1,8 @@
+import 'package:e_commarce_kk/Controller/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../models/wishlist_model.dart';
 
 class CustomProductCard extends StatefulWidget {
   final String image;
@@ -21,9 +24,14 @@ class CustomProductCard extends StatefulWidget {
 
   @override
   State<CustomProductCard> createState() => _CustomProductCardState();
+
+
 }
+   final wishlistController = Get.find<WishlistController>();
 
 class _CustomProductCardState extends State<CustomProductCard> {
+
+ // final WishlistController wishlistController = Get.find<WishlistController()>;
 
   bool isFavorite = false;
 
@@ -69,9 +77,24 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     ),
                     child: IconButton(
                       onPressed: () {
+
                         setState(() {
                           isFavorite = !isFavorite;
                         });
+
+                        final item = WishlistModel(
+                          id: widget.title, // temporary unique id
+                          name: widget.title,
+                          price: widget.price,
+                          discount: widget.discount,
+                          image: widget.image,
+                        );
+
+                        if (isFavorite) {
+                          wishlistController.addToWishlist(item);
+                        } else {
+                          wishlistController.removeFromWishlist(item.id);
+                        }
                       },
                       icon: Icon(
                         isFavorite
