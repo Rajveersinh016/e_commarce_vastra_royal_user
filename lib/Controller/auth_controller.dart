@@ -30,6 +30,7 @@ class AuthController extends GetxController{
         "email": email,
         "Phone": Phone,
         "name": name,
+        "profileImage" : ""
       });
 
       Get.snackbar("success", "Account Created");

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Controller/cart_controller.dart';
+import '../Checkout/Checkout.dart';
 import '../Custom_Widget/cart_items.dart';
 
 class AddToCartScreen extends StatelessWidget {
@@ -101,40 +102,32 @@ class AddToCartScreen extends StatelessWidget {
               }
 
               return ListView.builder(
-                itemCount:
-                cartController.cartItems.length,
+                itemCount: cartController.cartItems.length,
                 itemBuilder: (context, index) {
 
-                  final item =
-                  cartController.cartItems[index];
-
-                  // ✅ Safe image handling
-                  String imageUrl = "";
-                  if (item.productModel
-                      .images[item.selectedColor]
-                      ?.isNotEmpty ==
-                      true) {
-                    imageUrl = item
-                        .productModel
-                        .images[item.selectedColor]!
-                        .first;
-                  }
+                  final item = cartController.cartItems[index];
 
                   return CartItem(
-                    image: imageUrl,
+                    image: item.productModel.images.isNotEmpty
+                        ? item.productModel.images.values.first.first
+                        : "",
                     title: item.productModel.name,
-                    subtitle:
-                    "${item.selectedColor} | Size ${item.selectedSize}",
-                    price:
-                    "₹${item.totalPrice.toStringAsFixed(0)}",
+                    subtitle: "${item.selectedColor} • ${item.selectedSize}",
+                    price: "₹${item.totalPrice}",
                     qty: item.quantity,
-                    onAdd: () =>
-                        cartController.increaseQty(index),
-                    onRemove: () =>
-                        cartController.decreaseQty(index),
+
+                    onAdd: () {
+                      cartController.increaseQty(index);
+                    },
+
+                    onRemove: () {
+                      cartController.removeItem(index);
+                    },
                   );
                 },
               );
+
+
             }),
           ),
 
@@ -189,16 +182,21 @@ class AddToCartScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed:
-                        cartController.cartItems.isEmpty
-                            ? null
-                            : () {
-                          Get.snackbar(
-                            "Checkout",
-                            "Proceeding to checkout",
-                            snackPosition:
-                            SnackPosition.BOTTOM,
-                          );
+                        onPressed:(){
+                          Get.to(() => CheckoutScreen(
+                            items: cartController.cartItems,
+                          ));
+
+
+                        // cartController.cartItems.isEmpty
+                        //     ? null
+                        //     : () {
+                        //   Get.snackbar(
+                        //     "Checkout",
+                        //     "Proceeding to checkout",
+                        //     snackPosition:
+                        //     SnackPosition.BOTTOM,
+                        //   );
                         },
                         style:
                         ElevatedButton.styleFrom(

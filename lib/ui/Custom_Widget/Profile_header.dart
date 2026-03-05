@@ -58,30 +58,35 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.amber, width: 3),
               ),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: image_file != null
-                    ? FileImage(image_file!)
-                    : const AssetImage("lib/assets/images/Man.png") as ImageProvider,
-              ),
+              child: Obx(() {
+
+                final image = userController.user.value?.profileImage ?? "";
+
+                return CircleAvatar(
+                  radius: 50,
+                  backgroundImage: image.isEmpty
+                      ? const AssetImage("lib/assets/images/Man.png")
+                      : NetworkImage(image) as ImageProvider,
+                );
+              }),
             ),
 
 
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: pickImage,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.edit, color: Colors.white, size: 18),
-                ),
-              ),
-            )
+            // Positioned(
+            //   bottom: 0,
+            //   right: 0,
+            //   child: GestureDetector(
+            //     onTap: pickImage,
+            //     child: Container(
+            //       padding: const EdgeInsets.all(8),
+            //       decoration: const BoxDecoration(
+            //         color: Colors.blue,
+            //         shape: BoxShape.circle,
+            //       ),
+            //       child: const Icon(Icons.edit, color: Colors.white, size: 18),
+            //     ),
+            //   ),
+            // )
           ],
         ),
 

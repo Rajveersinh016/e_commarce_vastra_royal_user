@@ -1,4 +1,5 @@
 import 'package:e_commarce_kk/Colors/colors.dart';
+import 'package:e_commarce_kk/Controller/address_controller.dart';
 import 'package:e_commarce_kk/Controller/cart_controller.dart';
 import 'package:e_commarce_kk/Controller/product_controller.dart';
 import 'package:e_commarce_kk/Controller/wishlist_controller.dart';
@@ -158,6 +159,8 @@ class _HomePageState extends State<HomePage> {
   final CartController cartController = Get.put(CartController());
 
   final WishlistController wishlistController = Get.put(WishlistController());
+
+  final AddressController addressController = Get.put(AddressController());
 
 
 

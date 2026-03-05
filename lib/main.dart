@@ -1,3 +1,4 @@
+import 'package:e_commarce_kk/Controller/address_controller.dart';
 import 'package:e_commarce_kk/Controller/cart_controller.dart';
 import 'package:e_commarce_kk/ui/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Get.put(UserController());
   //Get.put(CartController());
+  Get.put(AddressController());
   runApp(const MyApp());
 }
 

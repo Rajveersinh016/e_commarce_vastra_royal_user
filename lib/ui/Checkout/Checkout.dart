@@ -2,224 +2,240 @@ import 'package:e_commarce_kk/ui/Home/Account/Payment_Method/payment_method.dart
 import 'package:e_commarce_kk/ui/Home/Account/Shipping_Address/shipping_address.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+import '../../Controller/address_controller.dart';
+import '../../models/cart_model.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+
+  final List<CartModel> items;
+
+  CheckoutScreen({super.key, required this.items});
+
+  final addressController = Get.find<AddressController>();
 
   @override
   Widget build(BuildContext context) {
+
+    double subtotal = items.fold(
+        0,
+            (sum, item) =>
+        sum +
+            ((item.productModel.price -
+                item.productModel.discount) *
+                item.quantity));
+
+    double tax = subtotal * 0.08;
+    double total = subtotal + tax;
+
     return Scaffold(
       backgroundColor: const Color(0xfff5f6fa),
 
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading:  IconButton(onPressed: (){
-          Get.back();
-        }, icon: Icon(Icons.arrow_back, color: Colors.black)),
-        title:Padding(
-          padding: const EdgeInsets.only(left: 58.0),
-          child: Text(
-            "Checkout",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(Icons.arrow_back,
+                color: Colors.black)),
+        title: const Text(
+          "Checkout",
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
         ),
-
-
+        centerTitle: true,
       ),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
 
-          
+          /// STEP INDICATOR
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
             children: [
               stepCircle("Cart", true),
               stepLine(),
-              stepCircle("Details", false, active: true),
+              stepCircle("Details", false,
+                  active: true),
               stepLine(),
               stepCircle("Done", false),
             ],
           ),
 
-           SizedBox(height: 25),
+          const SizedBox(height: 25),
 
-         
+          /// ADDRESS TITLE
           Row(
+            mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
             children: [
-              Text("SHIPPING ADDRESS",style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
-              SizedBox(width: 120,),
-              TextButton(onPressed: (){
-                Get.to(
-                    () => ShippingAddress(),
-                     transition: Transition.rightToLeft,
-                     duration: Duration(seconds: 1)
-                );
-              }, child: Text("Change",style: TextStyle(color: Colors.blue),))
+              const Text(
+                "SHIPPING ADDRESS",
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.to(() => ShippingAddress());
+                },
+                child: const Text("Change"),
+              )
             ],
           ),
 
           const SizedBox(height: 10),
 
-          Container(
-            height: Get.height*0.20,
-            width: Get.width*0.90,
+          /// ADDRESS BOX
+          Obx(() {
 
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade300),
-            ),
+            if (addressController.addresses
+                .isEmpty) {
+              return Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius:
+                  BorderRadius.circular(16),
+                ),
+                child:
+                const Text("No address selected"),
+              );
+            }
 
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0,top: 5),
+            final address = addressController
+                .addresses
+                .firstWhere((a) => a.isDefault,
+                orElse: () =>
+                addressController
+                    .addresses.first);
+
+            return Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                BorderRadius.circular(16),
+                border: Border.all(
+                    color: Colors.grey.shade300),
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
                 children: [
+
+                  Text(address.name,
+                      style: const TextStyle(
+                          fontWeight:
+                          FontWeight.bold)),
+
+                  const SizedBox(height: 6),
+
+                  Text(address.line1),
+                  Text(address.line2),
+
+                  Text(
+                      "${address.city}, ${address.state}"),
+
+                  Text("Zip: ${address.zipcode}"),
+
+                  const SizedBox(height: 6),
 
                   Row(
                     children: [
-
-
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.work_outline, color: Colors.blue),
-                      ),
-
-                      const SizedBox(width: 12),
-
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "John Doe",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              "Work Office",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
-
-
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.edit_outlined),
-                      ),
-
-
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete_outline),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 12),
-
-
-                  const Text(
-                    "789 Empire Tower, Business District",
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                  const Text(
-                    "Los Angeles, CA 90001, USA",
-                    style: TextStyle(color: Colors.black87),
-                  ),
-
-                  const SizedBox(height: 12),
-
-
-                  Row(
-                    children: const [
-                      Icon(Icons.phone, size: 18, color: Colors.grey),
-                      SizedBox(width: 6),
-                      Text(
-                        "+1 234 567 8901",
-                        style: TextStyle(color: Colors.grey),
-                      ),
+                      const Icon(Icons.phone,
+                          size: 16,
+                          color: Colors.grey),
+                      const SizedBox(width: 6),
+                      Text(address.phone),
                     ],
                   )
                 ],
               ),
-            ),
-          ),
+            );
+          }),
 
+          const SizedBox(height: 25),
 
-           SizedBox(height: 25),
-
-
-           Text(
-            "MY BAG (2)",
-            style: TextStyle(
+          /// BAG TITLE
+          Text(
+            "MY BAG (${items.length})",
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.grey),
           ),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-          bagItem(
-            "Velvet Evening Gown",
-            "Black • Size M",
-            "1,299.00",
-            "lib/assets/images/Woman.png",
+          /// PRODUCTS
+          ListView.builder(
+            shrinkWrap: true,
+            physics:
+            const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+
+              final item = items[index];
+              final product = item.productModel;
+
+              //final image = product.images.values.first.first;
+
+              String image = "";
+
+              if (product.images.isNotEmpty) {
+                final imageList = product.images.values.first;
+
+                if (imageList.isNotEmpty) {
+                  image = imageList.first;
+                }
+              }
+
+
+              return bagItem(
+                product.name,
+                "${item.selectedColor} • Size ${item.selectedSize}",
+                (product.price -
+                    product.discount)
+                    .toStringAsFixed(0),
+                image,
+                item.quantity,
+              );
+            },
           ),
 
-          bagItem(
-            "Royal Silk Scarf",
-            "Gold • One Size",
-            "145.00",
-            "lib/assets/images/Watch.png",
-          ),
+          const SizedBox(height: 25),
 
-          SizedBox(height: 25),
-
-
-
-
-
-
-          summaryCard(),
-
-
+          /// SUMMARY
+          summaryCard(subtotal, tax, total),
         ],
       ),
 
+      /// PLACE ORDER
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: SizedBox(
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              Get.to(
-                  () => PaymentMethod(),
-                  transition: Transition.rightToLeft,
-                  duration: Duration(seconds: 1)
-
-              );
+              Get.to(() => const PaymentMethod());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
+                  borderRadius:
+                  BorderRadius.circular(14)),
             ),
             child: const Text(
-              "Place Order ",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Colors.white),
+              "Place Order",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
         ),
@@ -227,7 +243,7 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-
+  /// STEP CIRCLE
   Widget stepCircle(String title, bool done,
       {bool active = false}) {
     return Column(
@@ -238,16 +254,15 @@ class CheckoutScreen extends StatelessWidget {
               ? Colors.blue
               : Colors.grey.shade300,
           child: done
-              ? const Icon(Icons.check, color: Colors.white, size: 18)
-              : Text(
-            active ? "2" : "",
-            style: const TextStyle(color: Colors.white),
-          ),
+              ? const Icon(Icons.check,
+              color: Colors.white, size: 18)
+              : Text(active ? "2" : ""),
         ),
         const SizedBox(height: 5),
         Text(title,
             style: TextStyle(
-                color: active ? Colors.blue : Colors.grey)),
+                color:
+                active ? Colors.blue : Colors.grey)),
       ],
     );
   }
@@ -261,26 +276,9 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-
-  Widget sectionTitle(String title, {String? action}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey)),
-        if (action != null)
-          Text(action,
-              style: const TextStyle(color: Colors.blue)),
-      ],
-    );
-  }
-
-
-
-  Widget bagItem(
-      String title, String sub, String price, String image) {
+  /// BAG ITEM
+  Widget bagItem(String title, String sub,
+      String price, String image, int qty) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -289,8 +287,15 @@ class CheckoutScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(14)),
       child: Row(
         children: [
-          Image.asset(image, width: 70),
+
+          image.isEmpty
+              ? Image.asset("lib/assets/images/Man.png", width: 70)
+              : image.startsWith("http")
+              ? Image.network(image, width: 70)
+              : Image.asset(image, width: 70),
+
           const SizedBox(width: 10),
+
           Expanded(
             child: Column(
                 crossAxisAlignment:
@@ -298,69 +303,86 @@ class CheckoutScreen extends StatelessWidget {
                 children: [
                   Text(title,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold)),
+                          fontWeight:
+                          FontWeight.bold)),
                   Text(sub,
                       style: const TextStyle(
                           color: Colors.grey)),
                   const SizedBox(height: 5),
-                  Text(price,
+                  Text("₹$price",
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold)),
+                          fontWeight:
+                          FontWeight.bold)),
                 ]),
           ),
-          const Text("x1", style: TextStyle(color: Colors.grey))
+
+          Text("x$qty",
+              style:
+              const TextStyle(color: Colors.grey))
         ],
       ),
     );
   }
 
-
-
-  Widget summaryCard() {
+  /// SUMMARY
+  Widget summaryCard(
+      double subtotal, double tax, double total) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14)),
       child: Column(
-        children: const [
+        children: [
+
           Row(
             mainAxisAlignment:
             MainAxisAlignment.spaceBetween,
             children: [
-              Text("Subtotal"),
-              Text("1,444.00"),
+              const Text("Subtotal"),
+              Text(subtotal.toStringAsFixed(2)),
             ],
           ),
-          SizedBox(height: 8),
-          Row(
+
+          const SizedBox(height: 8),
+
+          const Row(
             mainAxisAlignment:
             MainAxisAlignment.spaceBetween,
             children: [
               Text("Shipping"),
-              Text("Free", style: TextStyle(color: Colors.green)),
+              Text("Free",
+                  style:
+                  TextStyle(color: Colors.green)),
             ],
           ),
-          SizedBox(height: 8),
+
+          const SizedBox(height: 8),
+
           Row(
             mainAxisAlignment:
             MainAxisAlignment.spaceBetween,
             children: [
-              Text("Tax (8%)"),
-              Text("115.52"),
+              const Text("Tax (8%)"),
+              Text(tax.toStringAsFixed(2)),
             ],
           ),
-          Divider(),
+
+          const Divider(),
+
           Row(
             mainAxisAlignment:
             MainAxisAlignment.spaceBetween,
             children: [
-              Text("Total Amount",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              Text("1,559.52",
+              const Text("Total Amount",
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue)),
+                      fontWeight: FontWeight.bold)),
+              Text(
+                total.toStringAsFixed(2),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
+              ),
             ],
           ),
         ],

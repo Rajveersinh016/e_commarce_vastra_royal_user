@@ -376,7 +376,23 @@ class _ProductDetailState extends State<ProductDetail> {
                 onPressed: selectedSize.isEmpty
                           ? null
                           : () {
-                           Get.to(() => CheckoutScreen());
+                           //Get.to(() => CheckoutScreen());
+                  Get.to(() => CheckoutScreen(
+                    items: [
+                      CartModel(
+                        productModel: CartProductModel(
+                          id: widget.product.id,
+                          name: widget.product.name,
+                          price: widget.product.price,
+                          discount: widget.product.discount,
+                          images: widget.product.images,
+                        ),
+                        selectedColor: selectedColor,
+                        selectedSize: selectedSize,
+                        quantity: 1,
+                      )
+                    ],
+                  ));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

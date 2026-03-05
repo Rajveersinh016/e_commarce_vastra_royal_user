@@ -107,7 +107,7 @@ class _AccountPageState extends State<AccountPage> {
                   },
                     child: Container(
                       height: Get.height*0.08,
-                      width: Get.width*0.85,
+                      width: Get.width*0.88,
                       decoration: BoxDecoration(
                         color:Appcolor.light_grey,
                         borderRadius: BorderRadius.circular(10),
@@ -118,7 +118,7 @@ class _AccountPageState extends State<AccountPage> {
                           Icon(Icons.person,color: Colors.blueAccent,),
                           SizedBox(width: 50,),
                           Text("Edit Profile",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                          SizedBox(width: 100,),
+                          SizedBox(width: 110,),
                           Icon(Icons.arrow_forward_ios,color: Colors.grey,)
 
                         ],
@@ -144,7 +144,7 @@ class _AccountPageState extends State<AccountPage> {
                   },
                   child:Container(
                   height: Get.height*0.08,
-                  width: Get.width*0.85,
+                  width: Get.width*0.88,
                   decoration: BoxDecoration(
                     color:Appcolor.light_grey,
                     borderRadius: BorderRadius.circular(10),
@@ -155,7 +155,7 @@ class _AccountPageState extends State<AccountPage> {
                       Icon(Icons.fire_truck,color: Colors.blueAccent,),
                       SizedBox(width: 50,),
                       Text("Shipping Address",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                      SizedBox(width: 60,),
+                      SizedBox(width: 65,),
                       Icon(Icons.arrow_forward_ios,color: Colors.grey,)
 
                     ],
@@ -182,7 +182,7 @@ class _AccountPageState extends State<AccountPage> {
                   },
                     child: Container(
                       height: Get.height*0.08,
-                      width: Get.width*0.85,
+                      width: Get.width*0.88,
                       decoration: BoxDecoration(
                         color:Appcolor.light_grey,
                         borderRadius: BorderRadius.circular(10),
@@ -193,7 +193,7 @@ class _AccountPageState extends State<AccountPage> {
                           Icon(Icons.credit_card_outlined,color: Colors.blueAccent,),
                           SizedBox(width: 50,),
                           Text("Payment Method",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                          SizedBox(width: 60,),
+                          SizedBox(width: 66,),
                           Icon(Icons.arrow_forward_ios,color: Colors.grey,)
 
                         ],

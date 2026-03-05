@@ -18,7 +18,10 @@ class CartItem extends StatelessWidget {
     required this.qty,
     required this.onAdd,
     required this.onRemove,
+
   });
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +36,21 @@ class CartItem extends StatelessWidget {
       child: Row(
         children: [
 
-          
+
           Container(
             height: 80,
             width: 80,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              image: DecorationImage(
-                image: image.isEmpty
-                    ? const AssetImage(
-                    "lib/assets/images/Man.png")
-                    : NetworkImage(image)
-                as ImageProvider,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Image.network(
+                image,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset("lib/assets/images/Man.png");
+                },
               ),
             ),
           ),
@@ -73,8 +78,10 @@ class CartItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Icon(Icons.close,
-                        color: Colors.grey),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.red),
+                      onPressed: onRemove,
+                    ),
                   ],
                 ),
 

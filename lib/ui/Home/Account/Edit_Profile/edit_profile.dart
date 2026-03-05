@@ -107,7 +107,11 @@ class _EditProfileState extends State<EditProfile> {
                       radius: 50,
                       backgroundImage: image_file != null
                           ? FileImage(image_file!)
-                          : const AssetImage("lib/assets/images/Man.png") as ImageProvider,
+                          : usercontroller.user.value?.profileImage != null &&
+                          usercontroller.user.value!.profileImage.isNotEmpty
+                          ? NetworkImage(usercontroller.user.value!.profileImage)
+                          : const AssetImage("lib/assets/images/Man.png")
+                          as ImageProvider,
                     ),
                   ),
 
@@ -162,7 +166,8 @@ class _EditProfileState extends State<EditProfile> {
                       usercontroller.updateUser(
                           name: namecontroller.text.trim(),
                           email: emailcontroller.text.trim(),
-                          phone: phonecontroller.text.trim()
+                          phone: phonecontroller.text.trim(),
+                          imagePath: image_file?.path,
                       );
                   }
               ),

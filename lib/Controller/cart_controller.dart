@@ -17,6 +17,7 @@ class CartController extends GetxController {
   String? get uid => FirebaseAuth.instance.currentUser?.uid;
 
   RxList<CartModel> cartItems = <CartModel>[].obs;
+  //RxList<CartModel> cartItems = <CartModel>[].obs;
 
   @override
   void onInit() {
@@ -209,6 +210,8 @@ class CartController extends GetxController {
       await removeItem(index);
     }
   }
+
+
 
 
 }

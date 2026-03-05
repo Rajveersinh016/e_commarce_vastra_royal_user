@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 
 import '../models/user_model.dart';
@@ -32,33 +35,51 @@ class UserController extends GetxController{
     
   }
 
-  Future <void> updateUser({
+  Future<void> updateUser({
     required String name,
     required String email,
     required String phone,
+    String? imagePath,
+  }) async {
 
-}) async {
     final currentuser = firebaseAuth.currentUser;
     if(currentuser == null) return;
 
+    String imageUrl = user.value?.profileImage ?? "";
+
+    /// upload image if selected
+    if(imagePath != null){
+
+      File file = File(imagePath);
+
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child("profile_images")
+          .child("${currentuser.uid}.jpg");
+
+      await storageRef.putFile(file);
+
+      imageUrl = await storageRef.getDownloadURL();
+    }
+
     await databaseReference
-         .child("users")
-         .child(currentuser.uid)
-         .update({
-            "name" : name,
-            "email" : email,
-            "phone" : phone,
+        .child("users")
+        .child(currentuser.uid)
+        .update({
+      "name" : name,
+      "email" : email,
+      "Phone" : phone,
+      "profileImage" : imageUrl,
     });
 
     user.value = user.value!.copyWith(
       name: name,
       email: email,
       phone: phone,
+      profileImage: imageUrl,
     );
 
     Get.snackbar("Success", "Profile Updated");
-
-
   }
 
 

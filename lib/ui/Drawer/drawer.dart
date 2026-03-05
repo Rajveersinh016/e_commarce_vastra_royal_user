@@ -33,37 +33,18 @@ class AppDrawer extends StatelessWidget {
                 children: [
 
                   /// PROFILE
-                  Stack(
-                    children: [
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundImage:
-                        AssetImage("lib/assets/images/Woman.png"),
-                      ),
-                      Positioned(
-                        bottom: -2,
-                        left: 5,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.star, size: 14),
-                              SizedBox(width: 4),
-                              Text("GOLD",
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  Obx(() {
+
+                    final image = usecontroller.user.value?.profileImage ?? "";
+
+                    return CircleAvatar(
+                      radius: 35,
+                      backgroundImage: image.isEmpty
+                          ? const AssetImage("lib/assets/images/Woman.png")
+                          : NetworkImage(image) as ImageProvider,
+                    );
+
+                  }),
 
                   const SizedBox(height: 12),
 
