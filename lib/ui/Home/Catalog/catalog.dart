@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../../models/catalog_model.dart';
 import '../../Cart/add_to_cart_screen.dart';
+import '../../Product_screen/product_screen.dart';
 
 class Catalog extends StatefulWidget {
   const Catalog({super.key});
@@ -199,6 +201,34 @@ class _CatalogState extends State<Catalog> {
   }
 
 
+  List<CatalogModel> catalogList = [
+
+    CatalogModel(
+      title: "Summer Gala",
+      image: "lib/assets/images/Royal_suit.png",
+      tag: "summer",
+    ),
+
+    CatalogModel(
+      title: "Winter",
+      image: "lib/assets/images/Evening_grows.png",
+      tag: "winter",
+    ),
+
+    CatalogModel(
+      title: "Luxury",
+      image: "lib/assets/images/Gold.png",
+      tag: "luxury",
+    ),
+
+    CatalogModel(
+      title: "Trending",
+      image: "lib/assets/images/Royal_suit.png",
+      tag: "trending",
+    ),
+  ];
+
+
 
 
 
@@ -311,38 +341,39 @@ class _CatalogState extends State<Catalog> {
                 SizedBox(height: 10,),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0,right: 8),
-                  child: GridView.count(
-                    crossAxisCount: 2,
+                  child: GridView.builder(
+                    itemCount: catalogList.length,
                     shrinkWrap: true,
-                    childAspectRatio: 0.75,
                     physics: NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    children: [
-                      collectionItem(
-                        image: 'lib/assets/images/Royal_suit.png',
-                        title: 'The Royal Velvet',
-                        subtitle: 'Starting at',
-                        price: '₹2500',
-                      ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                    ),
+                    itemBuilder: (context, index) {
 
-                      collectionItem(
-                        image: 'lib/assets/images/Evening_grows.png',
-                        title: 'Evening Gowns',
-                        subtitle: 'Starting at',
-                        price: '₹2999',
-                      ),
-                      collectionItem(
-                        image: 'lib/assets/images/Gold.png',
-                        title: 'Gold Accessories',
-                        subtitle: 'Starting at',
-                        price: '₹2999',
-                      ),
+                      var catalog = catalogList[index];
 
+                      return GestureDetector(
+                        onTap: () {
 
+                          Get.to(
+                                () => ProductScreen(tag: catalog.tag),
+                            transition: Transition.rightToLeft,
+                          );
 
-                    ],
-                  ),
+                        },
+
+                        child: collectionItem(
+                          image: catalog.image,
+                          title: catalog.title,
+                          subtitle: "Starting at",
+                          price: "₹2500",
+                        ),
+                      );
+                    },
+                  )
                 )
 
 
