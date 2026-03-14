@@ -1,5 +1,7 @@
+import 'package:e_commarce_kk/Controller/payment_controller.dart';
 import 'package:e_commarce_kk/ui/Home/Account/Payment_Method/payment_method.dart';
 import 'package:e_commarce_kk/ui/Home/Account/Shipping_Address/shipping_address.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +15,8 @@ class CheckoutScreen extends StatelessWidget {
   CheckoutScreen({super.key, required this.items});
 
   final addressController = Get.find<AddressController>();
+
+  final PaymentController paymentController = Get.put(PaymentController());
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +226,18 @@ class CheckoutScreen extends StatelessWidget {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              Get.to(() => const PaymentMethod());
+
+              final user = FirebaseAuth.instance.currentUser;
+
+              paymentController.openCheckout(
+                  total,
+                  addressController.addresses.first.toJson(),
+                  items,
+                  user?.uid ?? "",
+                  user?.displayName ?? "User",
+                  user?.email ?? ""
+              );
+
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue,

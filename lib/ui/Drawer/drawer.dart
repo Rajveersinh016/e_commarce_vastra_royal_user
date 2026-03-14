@@ -129,6 +129,10 @@ class AppDrawer extends StatelessWidget {
               child: InkWell(
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();
+                  // ⭐ CLEAR USER CONTROLLER
+                  Get.delete<UserController>();
+
+                  // ⭐ GO TO LOGIN SCREEN
                   Get.offAll(() => Login());
                 },
                 child: Container(

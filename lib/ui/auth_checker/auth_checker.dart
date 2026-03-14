@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../Home/Bottom_navigation/bottom_navogation.dart';
-import '../Login/login.dart';
 import '../onboarding_screens/onboarding.dart';
 
 

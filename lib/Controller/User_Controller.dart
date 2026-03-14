@@ -7,34 +7,38 @@ import 'package:get/get.dart';
 
 import '../models/user_model.dart';
 
-class UserController extends GetxController{
+class UserController extends GetxController {
 
   Rxn<UserModel> user = Rxn<UserModel>();
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final DatabaseReference databaseReference = FirebaseDatabase.instance.ref();
-  
+
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     loadUser();
   }
-  
-  Future loadUser() async {
-    
-    final currentUser = firebaseAuth.currentUser;
-    
-    if(currentUser == null) return;
-    
-    final snapshot = await databaseReference.child("users").child(currentUser.uid).get();
 
-    if(snapshot.exists){
-      user.value = UserModel.fromMap(currentUser.uid, snapshot.value as Map);
+  // ⭐ Load user from Firebase
+  Future loadUser() async {
+
+    final currentUser = firebaseAuth.currentUser;
+
+    if (currentUser == null) return;
+
+    final snapshot = await databaseReference
+        .child("users")
+        .child(currentUser.uid)
+        .get();
+
+    if (snapshot.exists) {
+      user.value =
+          UserModel.fromMap(currentUser.uid, snapshot.value as Map);
     }
-    
-    
   }
 
+  // ⭐ Update user profile
   Future<void> updateUser({
     required String name,
     required String email,
@@ -43,12 +47,13 @@ class UserController extends GetxController{
   }) async {
 
     final currentuser = firebaseAuth.currentUser;
-    if(currentuser == null) return;
+
+    if (currentuser == null) return;
 
     String imageUrl = user.value?.profileImage ?? "";
 
-    /// upload image if selected
-    if(imagePath != null){
+    /// ⭐ Upload image if selected
+    if (imagePath != null) {
 
       File file = File(imagePath);
 
@@ -62,27 +67,21 @@ class UserController extends GetxController{
       imageUrl = await storageRef.getDownloadURL();
     }
 
+    /// ⭐ Update Firebase database
     await databaseReference
         .child("users")
         .child(currentuser.uid)
         .update({
-      "name" : name,
-      "email" : email,
-      "Phone" : phone,
-      "profileImage" : imageUrl,
+      "name": name,
+      "email": email,
+      "phone": phone, // fixed key (was Phone)
+      "profileImage": imageUrl,
     });
 
-    user.value = user.value!.copyWith(
-      name: name,
-      email: email,
-      phone: phone,
-      profileImage: imageUrl,
-    );
+    /// ⭐ Reload user from database to avoid null crash
+    await loadUser();
 
     Get.snackbar("Success", "Profile Updated");
   }
-
-
-
 
 }

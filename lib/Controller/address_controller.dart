@@ -8,7 +8,8 @@ class AddressController extends GetxController {
   final DatabaseReference db =
   FirebaseDatabase.instance.ref("addresses");
 
-  final String uid = FirebaseAuth.instance.currentUser!.uid;
+  //final String uid = FirebaseAuth.instance.currentUser!.uid;
+  final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   RxList<AddressModel> addresses = <AddressModel>[].obs;
 
@@ -21,7 +22,7 @@ class AddressController extends GetxController {
 
   Future<void> loadAddresses() async {
 
-    final snapshot = await db.child(uid).get();
+    final snapshot = await db.child(uid!).get();
 
     if(snapshot.exists){
 
@@ -43,7 +44,7 @@ class AddressController extends GetxController {
 
   Future<void> addAddress(AddressModel address) async {
 
-    final newRef = db.child(uid).push();
+    final newRef = db.child(uid!).push();
 
     await newRef.set(address.toJson());
 
@@ -54,7 +55,7 @@ class AddressController extends GetxController {
 
   Future<void> deleteAddress(String id) async {
 
-    await db.child(uid).child(id).remove();
+    await db.child(uid!).child(id).remove();
 
     loadAddresses();
 
@@ -63,7 +64,7 @@ class AddressController extends GetxController {
 
   Future<void> updateAddress(AddressModel address) async {
 
-    await db.child(uid).child(address.id).update(address.toJson());
+    await db.child(uid!).child(address.id).update(address.toJson());
 
     loadAddresses();
 
@@ -72,7 +73,7 @@ class AddressController extends GetxController {
 
   Future<void> setDefault(String id) async {
 
-    final snapshot = await db.child(uid).get();
+    final snapshot = await db.child(uid!).get();
 
     if(!snapshot.exists) return;
 
@@ -80,7 +81,7 @@ class AddressController extends GetxController {
 
     for(var entry in data.entries){
 
-      await db.child(uid).child(entry.key).update({
+      await db.child(uid!).child(entry.key).update({
         "isDefault": entry.key == id
       });
 
