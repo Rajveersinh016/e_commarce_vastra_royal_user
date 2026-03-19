@@ -229,9 +229,15 @@ class CheckoutScreen extends StatelessWidget {
 
               final user = FirebaseAuth.instance.currentUser;
 
+              final address = addressController.addresses.firstWhere(
+                    (a) => a.isDefault,
+                orElse: () => addressController.addresses.first,
+              );
+
               paymentController.openCheckout(
                   total,
-                  addressController.addresses.first.toJson(),
+                  //addressController.addresses.first.toJson(),
+                  address.toJson(),
                   items,
                   user?.uid ?? "",
                   user?.displayName ?? "User",
