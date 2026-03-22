@@ -18,69 +18,72 @@ class CartItem extends StatelessWidget {
     required this.qty,
     required this.onAdd,
     required this.onRemove,
-
   });
-
-
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
 
-
-          Container(
-            height: 80,
-            width: 80,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: Image.network(
-                image,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset("lib/assets/images/Man.png");
-                },
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(
+              image,
+              height: 90,
+              width: 85,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  "lib/assets/images/Man.png",
+                  height: 90,
+                  width: 85,
+                  fit: BoxFit.cover,
+                );
+              },
             ),
           ),
 
-          const SizedBox(width: 14),
+          const SizedBox(width: 12),
 
-          // ✅ DETAILS
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
                         title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontWeight:
-                          FontWeight.bold,
-                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.red),
-                      onPressed: onRemove,
+                    GestureDetector(
+                      onTap: onRemove,
+                      child: const Icon(
+                        Icons.close,
+                        size: 18,
+                        color: Colors.red,
+                      ),
                     ),
                   ],
                 ),
@@ -89,70 +92,59 @@ class CartItem extends StatelessWidget {
 
                 Text(
                   subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      color: Colors.grey),
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
 
                 Row(
-                  mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
 
-                    // ✅ Quantity Controls
                     Container(
-                      padding:
-                      const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color:
-                        Colors.grey.shade200,
-                        borderRadius:
-                        BorderRadius.circular(
-                            10),
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         children: [
                           GestureDetector(
                             onTap: onRemove,
-                            child: const Icon(
-                                Icons.remove,
-                                size: 18),
+                            child: const Icon(Icons.remove, size: 16),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Text(
                             qty.toString(),
-                            style:
-                            const TextStyle(
-                              fontWeight:
-                              FontWeight.bold,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           GestureDetector(
                             onTap: onAdd,
-                            child: const Icon(
-                                Icons.add,
-                                size: 18),
+                            child: const Icon(Icons.add, size: 16),
                           ),
                         ],
                       ),
                     ),
 
-                    // ✅ Price
                     Text(
                       price,
                       style: const TextStyle(
-                        fontWeight:
-                        FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.blueAccent,
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),

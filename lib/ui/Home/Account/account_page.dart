@@ -4,7 +4,6 @@ import 'package:e_commarce_kk/ui/Home/Account/Payment_Method/payment_method.dart
 import 'package:e_commarce_kk/ui/Home/Account/Shipping_Address/shipping_address.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import 'Edit_Profile/edit_profile.dart';
 
@@ -16,197 +15,183 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+
+  /// REUSABLE MENU TILE
+  Widget menuTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        height: 60,
+        decoration: BoxDecoration(
+          color: Appcolor.light_grey,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+
+            Icon(icon, color: Colors.blueAccent),
+
+            const SizedBox(width: 16),
+
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+
+            const Icon(Icons.arrow_forward_ios,
+                size: 16, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// STATS CARD
+  Widget statCard({
+    required String value,
+    required String label,
+  }) {
+    return Expanded(
+      child: Container(
+        height: 90,
+        decoration: BoxDecoration(
+          color: Appcolor.light_grey,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Profile',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+        elevation: 0,
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
+        ),
         actions: [
-          IconButton(onPressed: (){},
-              icon: Icon(Icons.notifications_none,color: Colors.black,))
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_none,
+                color: Colors.black),
+          )
         ],
       ),
+
       body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          const SizedBox(height: 10),
 
-              SizedBox(height: 10,),
-              Center(child: ProfileHeader()),
+          /// PROFILE HEADER
+          const Center(child: ProfileHeader()),
 
-              SizedBox(height: 20,),
+          const SizedBox(height: 20),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: Row(
-                  children: [
-                    Container(
-                      height: Get.height*0.10,
-                      width: Get.width*0.40,
-                      decoration: BoxDecoration(
-                        color:Appcolor.light_grey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text("12",style: TextStyle(color: Colors.blueAccent,fontWeight: FontWeight.bold,fontSize: 25),),
-                            Text("ORDERS",style: TextStyle(color: Colors.grey),)
-                          ],
-                        ),
-                      ),
-
-                    ),
-                    SizedBox(width: 20,),
-
-                    Container(
-                      height: Get.height*0.10,
-                      width: Get.width*0.40,
-                      decoration: BoxDecoration(
-                        color:Appcolor.light_grey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text("240",style: TextStyle(color: Colors.blueAccent,fontWeight: FontWeight.bold,fontSize: 25),),
-                            Text("POINTS",style: TextStyle(color: Colors.grey),)
-                          ],
-                        ),
-                      ),
-
-                    ),
-
-                  ],
-                ),
-              ),
-              
-              SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.only(left: 21.0),
-                child: Text("ACCOUNT",style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),),
-              ),
-
-              SizedBox(height: 10,),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child : InkWell(
-                  onTap: (){
-                    Get.to(
-                      () => EditProfile(),
-                      transition: Transition.rightToLeft,
-                      duration: Duration(seconds: 1),
-                    );
-                  },
-                    child: Container(
-                      height: Get.height*0.08,
-                      width: Get.width*0.88,
-                      decoration: BoxDecoration(
-                        color:Appcolor.light_grey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 20,),
-                          Icon(Icons.person,color: Colors.blueAccent,),
-                          SizedBox(width: 50,),
-                          Text("Edit Profile",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                          SizedBox(width: 110,),
-                          Icon(Icons.arrow_forward_ios,color: Colors.grey,)
-
-                        ],
-
-                      ),
-                    ),
-                ),
-
-              ),
-
-              SizedBox(height: 10,),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: InkWell(
-                  onTap: (){
-                    Get.to(
-                      () => ShippingAddress(),
-                      transition: Transition.rightToLeft,
-                      duration: Duration(seconds: 1),
-
-                    );
-                  },
-                  child:Container(
-                  height: Get.height*0.08,
-                  width: Get.width*0.88,
-                  decoration: BoxDecoration(
-                    color:Appcolor.light_grey,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 20,),
-                      Icon(Icons.fire_truck,color: Colors.blueAccent,),
-                      SizedBox(width: 50,),
-                      Text("Shipping Address",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                      SizedBox(width: 65,),
-                      Icon(Icons.arrow_forward_ios,color: Colors.grey,)
-
-                    ],
-
-                  ),
-                ),
-                ),
-              ),
-
-
-              SizedBox(height: 10,),
-
-              Padding(
-                padding: const EdgeInsets.only(left: 18.0),
-                child: InkWell(
-                  onTap: (){
-                    Get.to(
-                      () => PaymentMethod(),
-                      transition: Transition.rightToLeft,
-                      duration: Duration(seconds: 1),
-
-
-                    );
-                  },
-                    child: Container(
-                      height: Get.height*0.08,
-                      width: Get.width*0.88,
-                      decoration: BoxDecoration(
-                        color:Appcolor.light_grey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 20,),
-                          Icon(Icons.credit_card_outlined,color: Colors.blueAccent,),
-                          SizedBox(width: 50,),
-                          Text("Payment Method",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                          SizedBox(width: 66,),
-                          Icon(Icons.arrow_forward_ios,color: Colors.grey,)
-
-                        ],
-
-                      ),
-                    ),
-                ),
-              )
-
+          /// STATS
+          Row(
+            children: const [
+              Expanded(child: SizedBox()),
             ],
+          ),
 
+          Row(
+            children: [
+              statCard(value: "12", label: "ORDERS"),
+              const SizedBox(width: 12),
+              statCard(value: "240", label: "POINTS"),
+            ],
+          ),
 
-          )
+          const SizedBox(height: 20),
+
+          /// SECTION TITLE
+          const Text(
+            "ACCOUNT",
+            style: TextStyle(
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          /// MENU ITEMS
+          menuTile(
+            icon: Icons.person,
+            title: "Edit Profile",
+            onTap: () {
+              Get.to(
+                    () => EditProfile(),
+                transition: Transition.rightToLeft,
+              );
+            },
+          ),
+
+          menuTile(
+            icon: Icons.local_shipping_outlined,
+            title: "Shipping Address",
+            onTap: () {
+              Get.to(
+                    () => ShippingAddress(),
+                transition: Transition.rightToLeft,
+              );
+            },
+          ),
+
+          menuTile(
+            icon: Icons.credit_card_outlined,
+            title: "Payment Method",
+            onTap: () {
+              Get.to(
+                    () => PaymentMethod(),
+                transition: Transition.rightToLeft,
+              );
+            },
+          ),
+
+          const SizedBox(height: 20),
         ],
       ),
     );

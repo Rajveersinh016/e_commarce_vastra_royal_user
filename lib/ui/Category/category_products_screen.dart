@@ -27,27 +27,50 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(widget.categoryName),
+        elevation: 0,
         centerTitle: true,
+        title: Text(
+          widget.categoryName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
 
       body: Obx(() {
 
         if (controller.filteredProducts.isEmpty) {
-          return const Center(child: Text("No Products Found"));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.search_off,
+                    size: 60, color: Colors.grey),
+                SizedBox(height: 10),
+                Text(
+                  "No Products Found",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          );
         }
 
         return GridView.builder(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(12, 12, 12, 20),
           itemCount: controller.filteredProducts.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 0.60,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            mainAxisExtent: 260,
           ),
           itemBuilder: (_, i) {
 
@@ -59,7 +82,6 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               subtitle: product.category,
               price: product.price,
               discount: product.discount,
-              //rating: product.rating.toString(),
               onTap: () {
                 Get.to(() => ProductDetail(product: product));
               },

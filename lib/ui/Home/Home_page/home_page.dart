@@ -4,17 +4,13 @@ import 'package:e_commarce_kk/Controller/cart_controller.dart';
 import 'package:e_commarce_kk/Controller/product_controller.dart';
 import 'package:e_commarce_kk/Controller/wishlist_controller.dart';
 import 'package:e_commarce_kk/ui/Cart/add_to_cart_screen.dart';
-import 'package:e_commarce_kk/ui/Custom_Widget/Auto_scroll_widget.dart';
-import 'package:e_commarce_kk/ui/Custom_Widget/Custom_product_card.dart';
 import 'package:e_commarce_kk/ui/Product_Detail/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../Category/category_products_screen.dart';
-import '../../Custom_Widget/Home_custome_cart.dart';
+import '../../Custom_Widget/Custom_product_card.dart';
 import '../../Drawer/drawer.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,86 +21,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  // List<String> products = [
-  //   "Shirt",
-  //   "Jeans",
-  //   "Jacket",
-  //   "T-shirt",
-  //   "Hoodie",
-  //   "Sweater",
-  // ];
-  //
-  // List<String> filteredProducts = [];
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   filteredProducts = products;
-  // }
-  //
-  // void searchProduct(String value) {
-  //   setState(() {
-  //     filteredProducts = products
-  //         .where((item) =>
-  //         item.toLowerCase().contains(value.toLowerCase()))
-  //         .toList();
-  //   });
-  // }
-
   int selectedIndex = 0;
 
-  // Widget categoryItem({
-  //   required String image,
-  //   required String title,
-  //   required int index,
-  // }) {
-  //   bool selected = selectedIndex == index;
-  //
-  //
-  //
-  //   return GestureDetector(
-  //     onTap: () {
-  //       setState(() {
-  //         selectedIndex = index;
-  //       });
-  //     },
-  //   child:  Column(
-  //     children: [
-  //
-  //
-  //       Container(
-  //         height: 70,
-  //         width: 70,
-  //         decoration: BoxDecoration(
-  //           shape: BoxShape.circle,
-  //           border: Border.all(
-  //             color: selected ? Colors.blue : Colors.grey.shade300,
-  //             width: 2,
-  //           ),
-  //         ),
-  //         child: ClipOval(
-  //             child: Image.asset(
-  //               image,
-  //               fit: BoxFit.fill,
-  //             ),
-  //           ),
-  //
-  //       ),
-  //
-  //       SizedBox(height: 6),
-  //
-  //       Text(
-  //         title,
-  //         style: TextStyle(
-  //           color: selected ? Colors.blue : Colors.grey,
-  //           fontWeight: FontWeight.w500,
-  //         ),
-  //       ),
-  //     ],
-  //   )
-  //   );
-  // }
+  final ProductController productController = Get.put(ProductController());
+  final CartController cartController = Get.put(CartController());
+  final WishlistController wishlistController = Get.put(WishlistController());
+  final AddressController addressController = Get.put(AddressController());
 
+  /// CATEGORY ITEM
   Widget categoryItem({
     required String image,
     required String title,
@@ -142,336 +66,250 @@ class _HomePageState extends State<HomePage> {
             style: TextStyle(
               color: selected ? Colors.blue : Colors.grey,
               fontWeight: FontWeight.w500,
+              fontSize: 12,
             ),
           ),
         ],
       ),
     );
   }
-
-
-
-
-
-
- final ProductController productController = Get.put(ProductController());
-
-  final CartController cartController = Get.put(CartController());
-
-  final WishlistController wishlistController = Get.put(WishlistController());
-
-  final AddressController addressController = Get.put(AddressController());
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const AppDrawer(),
-      backgroundColor:Colors.white,
+      backgroundColor: Colors.white,
+
+      /// APP BAR
       appBar: AppBar(
-        backgroundColor:Colors.white,
-
-
-
-
-
-
-        shadowColor: Colors.black,
+        backgroundColor: Colors.white,
         elevation: 0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1),
-          child: Container(
-            height: 1,
-            color: Colors.grey.shade300, // line color
+        shadowColor: Colors.transparent,
+
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Colors.black),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
           ),
         ),
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.black),
-              onPressed: () {
-                Scaffold.of(context).openDrawer(); //  open drawer
-              },
-            ),
-          ),
 
-          //icon: Icon(Icons.menu,color: Colors.black,)),
-        title:Padding(
-          padding: const EdgeInsets.only(left: 18.0),
-          child: Row(
-            children: [
-              Container(
-                height: Get.height*0.05,
-                width: Get.width*0.10,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blueAccent
-                ),
-                child: Center(child: Text('v',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 25),)),
+        title: Row(
+          children: [
+            Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blueAccent,
               ),
-              SizedBox(width: 5,),
-              Text('Vastra Royal',style: TextStyle(color: Colors.blueAccent,fontWeight: FontWeight.bold,fontSize: 25),)
-            ],
-          ),
-        ) ,
+              child: const Center(
+                child: Text(
+                  'V',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Vastra Royal',
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+
         actions: [
-          IconButton(onPressed: (){
-            Get.to(
-                () => AddToCartScreen(),
-                transition: Transition.rightToLeft,
-                duration: Duration(seconds: 1)
-            );
-          }, icon: Icon(Icons.shopping_cart_outlined,color: Colors.black,)),
+          IconButton(
+            onPressed: () {
+              Get.to(() => AddToCartScreen(),
+                  transition: Transition.rightToLeft,
+                  duration: const Duration(milliseconds: 400));
+            },
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+          ),
         ],
-
-
       ),
 
-      body:
-      ListView(
-        children: [
+      /// BODY
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
 
-          Column(
+            const SizedBox(height: 10),
 
-            children: [
-
-              SizedBox(height: 20,),
-
-
-              SizedBox(
-                height: Get.height*0.07,
-                width: Get.width*0.90,
-                child: SearchBar(
+            /// SEARCH BAR
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TextField(
+                onChanged: productController.search,
+                decoration: const InputDecoration(
                   hintText: "Search clothes...",
-
-                  onChanged: productController.search, // same function
-
-                  leading: Icon(Icons.search),
-
-                  elevation: MaterialStateProperty.all(0), // very important
-                  shadowColor: MaterialStateProperty.all(Colors.transparent),
-
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.white),
-
-                  side: MaterialStateProperty.all(
-                    BorderSide(
-                      color: Colors.black12,
-                      width: 1,
-                    )
-                  ),
-
-
-                  shape: MaterialStateProperty.all(
-
-                    RoundedRectangleBorder(
-
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.search),
                 ),
               ),
+            ),
 
-              SizedBox(height: 10),
+            const SizedBox(height: 16),
 
-              Container(
-                height: Get.height*0.40,
-                width: Get.width*0.90,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(image: AssetImage('lib/assets/images/Home_model.png'),fit: BoxFit.fill)
+            /// BANNER
+            Container(
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                image: const DecorationImage(
+                  image: AssetImage('lib/assets/images/Home_model.png'),
+                  fit: BoxFit.fill,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 18.0,top: 140),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: Get.width*0.40,
-                          child: Text('Royal Summer Elegance',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),)),
-                          SizedBox(width:250,child: Text('Experience luxury with our new season arrivals',style: TextStyle(color: Colors.white),)),
-                          SizedBox(
-                            width: Get.width*0.70,
-                            child: ElevatedButton(onPressed: (){},
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  backgroundColor: Colors.blueAccent,
-                                ),
-                                child: Text('Shop Now',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
-                          )
-
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.6),
+                      Colors.transparent,
                     ],
                   ),
                 ),
-              ),
-
-              SizedBox(height: 10,),
-              Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 210.0),
-                    child: Text('Categories',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                  ),
-                  SizedBox(height: 2,),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child:
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-
-                          categoryItem(image: 'lib/assets/images/Woman.png', title:"Women's Ethnic" , index: 0),
-                          SizedBox(width: 8,),
-                          categoryItem(image: 'lib/assets/images/Man.png', title:"Men's Ethnic", index: 1),
-                          SizedBox(width: 8),
-                          categoryItem(image: 'lib/assets/images/Accessories.png', title:'Accessories', index: 2),
-                          SizedBox(width: 8),
-                          categoryItem(image: 'lib/assets/images/Shoes.png', title:'Shoes', index: 3),
-                          SizedBox(width: 8),
-                          categoryItem(image: 'lib/assets/images/Watch.png', title:'Watch', index: 4),
-                          SizedBox(width: 8),
-                          categoryItem(image: 'lib/assets/images/glasses.png', title:'Glasses', index: 5),
-                          SizedBox(width: 8),
-
-
-                        ],
-                      ),
-
-                    ),
-                  )
-                ],
-              ),
-              
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.only(left: 30.0),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('New Arrivals',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                    SizedBox(width: 130,),
-                    TextButton(onPressed: (){},
-                        child: Text('See All',style: TextStyle(color: Colors.blue,fontSize: 15),))
+                    const Text(
+                      'Royal Summer Elegance',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Experience luxury with our new arrivals',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        "Shop Now",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
                   ],
                 ),
               ),
-              SizedBox(height: 10,),
+            ),
 
+            const SizedBox(height: 20),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Obx(() {
+            /// CATEGORY TITLE
+            const Text(
+              "Categories",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
 
-                  if(productController.isLoading.value){
-                    return const Center(child: CircularProgressIndicator());
-                  }
+            const SizedBox(height: 10),
 
-                  if(productController.homeProducts.isEmpty){
-                    return const Center(child: Text("No Products Found"));
-                  }
+            /// CATEGORY LIST
+            SizedBox(
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  categoryItem(image: 'lib/assets/images/Woman.png', title: "Women's Ethnic", index: 0),
+                  const SizedBox(width: 10),
+                  categoryItem(image: 'lib/assets/images/Man.png', title: "Men's Ethnic", index: 1),
+                  const SizedBox(width: 10),
+                  categoryItem(image: 'lib/assets/images/Accessories.png', title: 'Accessories', index: 2),
+                  const SizedBox(width: 10),
+                  categoryItem(image: 'lib/assets/images/Shoes.png', title: 'Shoes', index: 3),
+                  const SizedBox(width: 10),
+                  categoryItem(image: 'lib/assets/images/Watch.png', title: 'Watch', index: 4),
+                ],
+              ),
+            ),
 
-                  return GridView.builder(
-                    itemCount: productController.homeProducts.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.65,
-                    ),
-                    itemBuilder: (_, i){
+            const SizedBox(height: 20),
 
-                      final product = productController.homeProducts[i];
+            /// NEW ARRIVALS HEADER
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "New Arrivals",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text("See All"),
+                )
+              ],
+            ),
 
-                      return CustomProductCard(
-                        image: product.coverImage,
-                        title: product.name,
-                        subtitle: product.category,
-                        price: product.price,
-                        discount: product.discount,
+            const SizedBox(height: 10),
 
-                        //rating: product.rating.toString(),
-                        onTap: () {
-                          Get.to(
-                              () => ProductDetail(
-                                product: product,
-                          )
+            /// PRODUCT GRID
+            Obx(() {
+              if (productController.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                          );
-                        },
-                      );
+              if (productController.homeProducts.isEmpty) {
+                return const Center(child: Text("No Products Found"));
+              }
+
+              return GridView.builder(
+                itemCount: productController.homeProducts.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                ),
+                itemBuilder: (_, i) {
+                  final product = productController.homeProducts[i];
+
+                  return CustomProductCard(
+                    image: product.coverImage,
+                    title: product.name,
+                    subtitle: product.category,
+                    price: product.price,
+                    discount: product.discount,
+                    onTap: () {
+                      Get.to(() => ProductDetail(product: product));
                     },
                   );
-                }),
-              )
+                },
+              );
+            }),
 
-
-
-
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 10.0),
-              //   child: GridView.count(
-              //     crossAxisCount: 2,
-              //     shrinkWrap: true,
-              //     childAspectRatio: 0.65,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     children: [
-              //       CustomProductCard(
-              //           image: 'lib/assets/images/Man.png',
-              //           title: 'Man wear',
-              //           subtitle: "Man's Formal",
-              //           price: '250.00',
-              //           rating: '4.5',
-              //           onTap: (){
-              //             Get.to(()=> ProductDetail(product: product));
-              //            },
-              //
-              //       ),
-              //       CustomProductCard(
-              //           image: 'lib/assets/images/Woman.png',
-              //           title: 'Woman wear',
-              //           subtitle: "Woman's wear",
-              //           price: '250.00',
-              //           rating: '4.5',
-              //         onTap: (){
-              //           Get.to(()=> ProductDetail(product: product));
-              //         },
-              //
-              //       ),
-              //       CustomProductCard(
-              //           image: 'lib/assets/images/Watch.png',
-              //           title: 'Watch',
-              //           subtitle: "Watch",
-              //           price: '250.00',
-              //           rating: '4.5',
-              //         onTap: (){
-              //           Get.to(()=> ProductDetail(product: product));
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // )
-
-
-
-
-
-
-
-
-            ],
-          )
-
-
-        ],
-      ) ,
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
     );
   }
 }
-
-

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../../models/catalog_model.dart';
 import '../../Cart/add_to_cart_screen.dart';
@@ -15,36 +14,33 @@ class Catalog extends StatefulWidget {
 
 class _CatalogState extends State<Catalog> {
 
-  List<String> products = [
-    "Shirt",
-    "Jeans",
-    "Jacket",
-    "T-shirt",
-    "Hoodie",
-    "Sweater",
-  ];
-
-  List<String> filteredProducts = [];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredProducts = products;
-  }
-
-  void searchProduct(String value) {
-    setState(() {
-      filteredProducts = products
-          .where((item) =>
-          item.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
-  }
-
   int selectedIndex = 0;
 
+  List<CatalogModel> catalogList = [
+    CatalogModel(
+      title: "Summer Gala",
+      image: "lib/assets/images/Royal_suit.png",
+      tag: "summer",
+    ),
+    CatalogModel(
+      title: "Winter",
+      image: "lib/assets/images/Evening_grows.png",
+      tag: "winter",
+    ),
+    CatalogModel(
+      title: "Luxury",
+      image: "lib/assets/images/Gold.png",
+      tag: "luxury",
+    ),
+    CatalogModel(
+      title: "Trending",
+      image: "lib/assets/images/Royal_suit.png",
+      tag: "trending",
+    ),
+  ];
 
-  Widget productItem({
+  /// FILTER CHIP
+  Widget filterChip({
     required String title,
     required int index,
   }) {
@@ -56,71 +52,26 @@ class _CatalogState extends State<Catalog> {
           selectedIndex = index;
         });
       },
-      child: Container(
-        height: Get.height * 0.06,
-        width: Get.width * 0.32,
-        margin: EdgeInsets.only(right: 8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        margin: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
-          borderRadius: BorderRadius.circular(50),
-          color: selected ? Colors.blueAccent : Colors.white,
+          color: selected ? Colors.blueAccent : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(30),
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyle(
-              color: selected ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: selected ? Colors.white : Colors.black87,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
     );
   }
 
-//   Widget Collection_items({
-//     required String image,
-//     required String title,
-//     required String subtitle,
-//     required String price,
-//
-// }) {
-//     return
-//       Container(
-//         height: Get.height*0.40,
-//         width: Get.width*0.35,
-//         // color: Colors.blueAccent,
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(10),
-//           image: DecorationImage(image: AssetImage(image),fit: BoxFit.fill),
-//         ),
-//         child: Column(
-//           // mainAxisAlignment: MainAxisAlignment.end,
-//           children: [
-//             Padding(
-//               padding: const EdgeInsets.only(top: 158.0),
-//               child: SizedBox(
-//                   width: Get.height*0.20,
-//                   child: Text(title,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 25),)),
-//             ),
-//             Padding(
-//               padding: const EdgeInsets.only(left: 18.0),
-//               child: Row(
-//                 children: [
-//                   Text(subtitle,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-//                   SizedBox(width: 5,),
-//                   Text(price,style: TextStyle(color: Colors.yellow,fontWeight: FontWeight.bold),),
-//                 ],
-//               ),
-//             )
-//           ],
-//         ),
-//       );
-//
-//
-// }
-
-
+  /// COLLECTION CARD (PREMIUM)
   Widget collectionItem({
     required String image,
     required String title,
@@ -128,71 +79,87 @@ class _CatalogState extends State<Catalog> {
     required String price,
   }) {
     return Container(
-      height: Get.height * 0.40,
-      width: Get.width * 0.35,
-
-
-
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(
-          image: AssetImage(image),
-          fit: BoxFit.cover,
-        ),
-      ),
-
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-
-
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.center,
-            colors: [
-              Colors.black.withOpacity(0.75),
-              Colors.transparent,
-            ],
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
-        ),
-
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Stack(
           children: [
 
-
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+            /// IMAGE
+            Positioned.fill(
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
               ),
             ),
 
-            const SizedBox(height: 4),
-
-
-            Row(
-              children: [
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+            /// GRADIENT
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [
+                      Colors.black.withOpacity(0.7),
+                      Colors.transparent,
+                    ],
                   ),
                 ),
-                const SizedBox(width: 5),
-                Text(
-                  price,
-                  style: const TextStyle(
-                    color: Colors.yellow,
-                    fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            /// TEXT
+            Positioned(
+              left: 12,
+              bottom: 12,
+              right: 12,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 4),
+
+                  Row(
+                    children: [
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        price,
+                        style: const TextStyle(
+                          color: Colors.yellow,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -200,192 +167,149 @@ class _CatalogState extends State<Catalog> {
     );
   }
 
-
-  List<CatalogModel> catalogList = [
-
-    CatalogModel(
-      title: "Summer Gala",
-      image: "lib/assets/images/Royal_suit.png",
-      tag: "summer",
-    ),
-
-    CatalogModel(
-      title: "Winter",
-      image: "lib/assets/images/Evening_grows.png",
-      tag: "winter",
-    ),
-
-    CatalogModel(
-      title: "Luxury",
-      image: "lib/assets/images/Gold.png",
-      tag: "luxury",
-    ),
-
-    CatalogModel(
-      title: "Trending",
-      image: "lib/assets/images/Royal_suit.png",
-      tag: "trending",
-    ),
-  ];
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
+      /// APP BAR
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 0,
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: const [
             Row(
               children: [
-                Text('Discover',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-                SizedBox(width: 5,),
-                Text('Luxury',style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),),
+                Text(
+                  'Discover ',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Luxury',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
-            Text('VASTRA ROYALE EXCLUSIVE',style: TextStyle(fontSize: 10,color: Colors.black54),)
+            Text(
+              'VASTRA ROYALE EXCLUSIVE',
+              style: TextStyle(fontSize: 10, color: Colors.black54),
+            )
           ],
         ),
 
         actions: [
-          IconButton(onPressed: (){
-            Get.to(
-                    () => AddToCartScreen(),
-                transition: Transition.rightToLeft,
-                duration: Duration(seconds: 1)
-            );
-          },
-              icon: Icon(Icons.shopping_cart_outlined,color: Colors.black,weight: 2,))
+          IconButton(
+            onPressed: () {
+              Get.to(() => AddToCartScreen(),
+                  transition: Transition.rightToLeft,
+                  duration: const Duration(milliseconds: 400));
+            },
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+          )
         ],
       ),
-      body:
-        ListView(
-          children: [
 
-            Column(
+      /// BODY
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+
+          const SizedBox(height: 10),
+
+          /// SEARCH BAR (MODERN)
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const TextField(
+              decoration: InputDecoration(
+                hintText: "Search collections...",
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          /// FILTERS
+          SizedBox(
+            height: 45,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: [
-
-                SizedBox(height: 10,),
-
-                SizedBox(
-                  height: Get.height*0.07,
-                  width: Get.width*0.90,
-                  child: SearchBar(
-                    hintText: "Search clothes...",
-                    hintStyle: MaterialStateProperty.all(
-                      TextStyle(color: Colors.grey),
-                    ),
-
-
-                    onChanged: searchProduct, // same function
-
-                    leading: Icon(Icons.search,color: Colors.lightBlueAccent,),
-
-                    elevation: MaterialStateProperty.all(0), // very important
-                    shadowColor: MaterialStateProperty.all(Colors.transparent),
-
-                    backgroundColor:
-                    MaterialStateProperty.all(Colors.white),
-
-                    side: MaterialStateProperty.all(
-                        BorderSide(
-                          color: Colors.black12,
-                          width: 1,
-                        )
-                    ),
-
-
-                    shape: MaterialStateProperty.all(
-
-                      RoundedRectangleBorder(
-
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 10,),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 12),
-                      productItem(title: 'Summer Gala', index: 0),
-                      productItem(title: 'Winter', index: 1),
-                      productItem(title: 'Luxury', index: 2),
-                      productItem(title: 'Trending', index: 3),
-                      SizedBox(width: 12),
-                    ],
-                  ),
-                ),
-                
-                SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Row(
-                    children: [
-                      Text('Curated Collections',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                      SizedBox(width: 90,),
-                      TextButton(onPressed: (){},
-                          child: Text('See All',style: TextStyle(color: Colors.blue,fontSize: 15),),)
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0,right: 8),
-                  child: GridView.builder(
-                    itemCount: catalogList.length,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.75,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                    ),
-                    itemBuilder: (context, index) {
-
-                      var catalog = catalogList[index];
-
-                      return GestureDetector(
-                        onTap: () {
-
-                          Get.to(
-                                () => ProductScreen(tag: catalog.tag),
-                            transition: Transition.rightToLeft,
-                          );
-
-                        },
-
-                        child: collectionItem(
-                          image: catalog.image,
-                          title: catalog.title,
-                          subtitle: "Starting at",
-                          price: "₹2500",
-                        ),
-                      );
-                    },
-                  )
-                )
-
-
-
-
+                filterChip(title: 'Summer', index: 0),
+                filterChip(title: 'Winter', index: 1),
+                filterChip(title: 'Luxury', index: 2),
+                filterChip(title: 'Trending', index: 3),
               ],
-            )
+            ),
+          ),
 
+          const SizedBox(height: 20),
 
+          /// HEADER
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Curated Collections',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text("See All"),
+              )
+            ],
+          ),
 
-          ],
-        )
+          const SizedBox(height: 10),
+
+          /// GRID (FIXED HEIGHT SAFE)
+          GridView.builder(
+            itemCount: catalogList.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: 220, // 🔥 NO OVERFLOW EVER
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemBuilder: (context, index) {
+
+              var catalog = catalogList[index];
+
+              return GestureDetector(
+                onTap: () {
+                  Get.to(
+                        () => ProductScreen(tag: catalog.tag),
+                    transition: Transition.rightToLeft,
+                  );
+                },
+                child: collectionItem(
+                  image: catalog.image,
+                  title: catalog.title,
+                  subtitle: "Starting at",
+                  price: "₹2500",
+                ),
+              );
+            },
+          ),
+
+          const SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }

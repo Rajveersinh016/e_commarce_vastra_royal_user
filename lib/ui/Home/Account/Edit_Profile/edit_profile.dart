@@ -1,14 +1,10 @@
 import 'dart:io';
 
 import 'package:e_commarce_kk/Controller/User_Controller.dart';
-import 'package:e_commarce_kk/ui/Home/Account/Shipping_Address/Edit_Address/edit_address.dart';
-import 'package:e_commarce_kk/ui/Home/Account/account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../Custom_Widget/Profile_header.dart';
 import '../../../Custom_Widget/text_filed_and_button.dart';
 
 class EditProfile extends StatefulWidget {
@@ -19,25 +15,19 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  
+
   final usercontroller = Get.find<UserController>();
 
-  File? image_file;
+  File? imageFile;
   final ImagePicker picker = ImagePicker();
 
   Future<void> pickImage() async {
-    final picked = await picker.pickImage(
-        source:ImageSource.gallery
-    );
-
-    //print("RESULT: $picked");
-
-    if(picked != null){
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
       setState(() {
-        image_file = File(picked.path);
+        imageFile = File(picked.path);
       });
     }
-
   }
 
   final namecontroller = TextEditingController();
@@ -48,7 +38,6 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
 
-    /// fill instantly if already loaded
     final user = usercontroller.user.value;
     if (user != null) {
       namecontroller.text = user.name;
@@ -56,7 +45,6 @@ class _EditProfileState extends State<EditProfile> {
       phonecontroller.text = user.phone;
     }
 
-    /// listen for future updates
     usercontroller.user.listen((user) {
       if (user != null) {
         namecontroller.text = user.name;
@@ -66,118 +54,154 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade50,
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Get.back();
-        },
-            icon:Icon(Icons.keyboard_arrow_left,size: 30,)),
-        title: Padding(
-          padding: const EdgeInsets.only(left: 58.0),
-          child: Text("Edit Profile",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
         ),
-
+        title: const Text(
+          "Edit Profile",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
 
       body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-
-        child:Column(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
           children: [
-            SizedBox(height: 20,),
 
-            Center(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
+            const SizedBox(height: 20),
 
+            Stack(
+              children: [
 
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.amber, width: 3),
-                    ),
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: image_file != null
-                          ? FileImage(image_file!)
-                          : usercontroller.user.value?.profileImage != null &&
-                          usercontroller.user.value!.profileImage.isNotEmpty
-                          ? NetworkImage(usercontroller.user.value!.profileImage)
-                          : const AssetImage("lib/assets/images/Man.png")
-                          as ImageProvider,
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blueAccent,
+                        Colors.purpleAccent,
+                      ],
                     ),
                   ),
+                  child: Obx(() {
 
+                    final image =
+                        usercontroller.user.value?.profileImage ?? "";
 
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: pickImage,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.edit, color: Colors.white, size: 18),
+                    return CircleAvatar(
+                      radius: 55,
+                      backgroundColor: Colors.white,
+                      backgroundImage: imageFile != null
+                          ? FileImage(imageFile!)
+                          : image.isEmpty
+                          ? const AssetImage("lib/assets/images/Man.png")
+                          : NetworkImage(image) as ImageProvider,
+                    );
+                  }),
+                ),
+
+                Positioned(
+                  bottom: 4,
+                  right: 4,
+                  child: GestureDetector(
+                    onTap: pickImage,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
+                          )
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 18,
                       ),
                     ),
                   ),
-
-                ],
-
-              ),
-              
-              
+                ),
+              ],
             ),
-            Text("Change Profile Image",style: TextStyle(fontSize: 15,color: Colors.blue,fontWeight: FontWeight.bold),),
 
-            SizedBox(height: 30,),
+            const SizedBox(height: 10),
+
+            const Text(
+              "Change Profile Image",
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
             AppFormField(
               title: 'Name',
               hint: 'Katherine King',
               icon: Icons.person,
               controller: namecontroller,
-
-
             ),
-            SizedBox(height: 15,),
 
-            AppFormField(title: "Email Address", hint:"example@gmail.com", icon:Icons.mail, controller: emailcontroller),
+            const SizedBox(height: 15),
 
-            SizedBox(height: 15,),
+            AppFormField(
+              title: "Email Address",
+              hint: "example@gmail.com",
+              icon: Icons.mail,
+              controller: emailcontroller,
+            ),
 
-            AppFormField(title: "Phone Number", hint: "+91 987456123", icon: Icons.phone, controller: phonecontroller),
+            const SizedBox(height: 15),
 
-            SizedBox(height: 50,),
+            AppFormField(
+              title: "Phone Number",
+              hint: "+91 987456123",
+              icon: Icons.phone,
+              controller: phonecontroller,
+            ),
+
+            const SizedBox(height: 40),
 
             SizedBox(
               height: 50,
-              child: AppFormButton(title: "Save Changes", icon: Icons.check_circle
-                  , onTap: (){
-                      usercontroller.updateUser(
-                          name: namecontroller.text.trim(),
-                          email: emailcontroller.text.trim(),
-                          phone: phonecontroller.text.trim(),
-                          imagePath: image_file?.path,
-                      );
-                  }
+              width: double.infinity,
+              child: AppFormButton(
+                title: "Save Changes",
+                icon: Icons.check_circle,
+                onTap: () {
+                  usercontroller.updateUser(
+                    name: namecontroller.text.trim(),
+                    email: emailcontroller.text.trim(),
+                    phone: phonecontroller.text.trim(),
+                    imagePath: imageFile?.path,
+                  );
+                },
               ),
-            )
+            ),
 
+            const SizedBox(height: 20),
           ],
-        )
+        ),
       ),
-      
-
     );
   }
 }

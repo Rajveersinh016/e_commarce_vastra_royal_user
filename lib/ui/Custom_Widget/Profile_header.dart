@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Controller/User_Controller.dart';
@@ -18,32 +17,25 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
   final userController = Get.find<UserController>();
 
-
   File? image_file;
   final ImagePicker picker = ImagePicker();
 
   Future<void> pickImage() async {
     final picked = await picker.pickImage(
-        source:ImageSource.gallery
+      source: ImageSource.gallery,
     );
 
-    //print("RESULT: $picked");
-
-    if(picked != null){
+    if (picked != null) {
       setState(() {
         image_file = File(picked.path);
       });
     }
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-
 
         const SizedBox(height: 20),
 
@@ -51,12 +43,16 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           alignment: Alignment.bottomRight,
           children: [
 
-
             Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.all(3),
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.amber, width: 3),
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blueAccent,
+                    Colors.purpleAccent,
+                  ],
+                ),
               ),
               child: Obx(() {
 
@@ -64,6 +60,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
                 return CircleAvatar(
                   radius: 50,
+                  backgroundColor: Colors.white,
                   backgroundImage: image.isEmpty
                       ? const AssetImage("lib/assets/images/Man.png")
                       : NetworkImage(image) as ImageProvider,
@@ -71,40 +68,49 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               }),
             ),
 
-
-            // Positioned(
-            //   bottom: 0,
-            //   right: 0,
-            //   child: GestureDetector(
-            //     onTap: pickImage,
-            //     child: Container(
-            //       padding: const EdgeInsets.all(8),
-            //       decoration: const BoxDecoration(
-            //         color: Colors.blue,
-            //         shape: BoxShape.circle,
-            //       ),
-            //       child: const Icon(Icons.edit, color: Colors.white, size: 18),
-            //     ),
-            //   ),
-            // )
+            GestureDetector(
+              onTap: pickImage,
+              child: Container(
+                margin: const EdgeInsets.only(right: 4, bottom: 4),
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                    )
+                  ],
+                ),
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
           ],
         ),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
 
         Obx(() => Text(
           userController.user.value?.name ?? "Loading...",
           style: const TextStyle(
-              //color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         )),
+
+        const SizedBox(height: 4),
 
         Obx(() => Text(
           userController.user.value?.email ?? "Loading...",
           style: const TextStyle(
-              color: Colors.grey,
-              fontWeight: FontWeight.bold),
+            color: Colors.grey,
+            fontSize: 13,
+          ),
         )),
 
         const SizedBox(height: 10),
@@ -113,18 +119,19 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.amber),
+            color: Colors.amber.withOpacity(0.15),
           ),
           child: const Text(
             "GOLD MEMBER",
-            style: TextStyle(color: Colors.amber),
+            style: TextStyle(
+              color: Colors.amber,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
           ),
         ),
 
       ],
-
-
-
     );
   }
 }

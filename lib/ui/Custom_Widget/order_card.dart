@@ -8,7 +8,7 @@ class OrderCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final String price;
-  final String status; // arriving, delivered, transit
+  final String status;
   final bool showTrack;
 
   const OrderCard({
@@ -24,11 +24,12 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     Color statusColor =
     status == "DELIVERED" ? Colors.green : Colors.orange;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(14),
 
       decoration: BoxDecoration(
@@ -36,31 +37,44 @@ class OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           )
-        ]
+        ],
       ),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// ORDER ID + STATUS
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "ORDER ID\n$orderId",
-                style: const TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "ORDER ID",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 11,
+                    ),
+                  ),
+                  Text(
+                    orderId,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
 
               Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
@@ -68,28 +82,27 @@ class OrderCard extends StatelessWidget {
                 child: Text(
                   status,
                   style: TextStyle(
-                      color: statusColor,
-                      fontWeight: FontWeight.bold),
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
 
-          /// IMAGE + TITLE
           Row(
             children: [
 
-              Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    image: AssetImage(image),
-                    fit: BoxFit.fill,
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  image,
+                  height: 75,
+                  width: 75,
+                  fit: BoxFit.fill,
                 ),
               ),
 
@@ -99,17 +112,37 @@ class OrderCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold)),
-                    Text(subtitle,
-                        style: const TextStyle(color: Colors.grey)),
-                    const SizedBox(height: 4),
-                    Text(price,
-                        style: const TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18)),
+
+                    Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+
+                    const SizedBox(height: 2),
+
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -118,28 +151,31 @@ class OrderCard extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          /// BUTTONS
           if (showTrack)
             Row(
               children: [
 
                 Expanded(
                   child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      )
-                    ),
                     onPressed: () {
                       Get.to(
-                          () => TrackOrder(),
+                            () => TrackOrder(),
                         transition: Transition.rightToLeft,
-                        duration: Duration(seconds: 1),
+                        duration: const Duration(milliseconds: 400),
                       );
                     },
-                    icon: const Icon(Icons.local_shipping,color: Colors.white,),
-                    label: const Text("Track Order",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    icon: const Icon(Icons.local_shipping,
+                        size: 16, color: Colors.white),
+                    label: const Text(
+                      "Track",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
 
@@ -149,12 +185,17 @@ class OrderCard extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )
+                      side: const BorderSide(
+                          color: Colors.blueAccent),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-
-                    child: const Text("Details",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),),
+                    child: const Text(
+                      "Details",
+                      style: TextStyle(
+                          color: Colors.blueAccent),
+                    ),
                   ),
                 ),
               ],
@@ -164,9 +205,9 @@ class OrderCard extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {},
-                child: const Text("Order Details"),
+                child: const Text("View Details"),
               ),
-            )
+            ),
         ],
       ),
     );
