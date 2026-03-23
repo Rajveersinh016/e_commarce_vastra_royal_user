@@ -98,11 +98,17 @@ class OrderCard extends StatelessWidget {
 
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
+                child: Image.network(
                   image,
                   height: 75,
                   width: 75,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover, // 🔥 FIX
+                  errorBuilder: (_, __, ___) => Image.asset(
+                    "lib/assets/images/Man.png",
+                    height: 75,
+                    width: 75,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
 
@@ -127,6 +133,8 @@ class OrderCard extends StatelessWidget {
 
                     Text(
                       subtitle,
+                      maxLines: 1, // 🔥 FIX
+                      overflow: TextOverflow.ellipsis, // 🔥 FIX
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
@@ -137,6 +145,8 @@ class OrderCard extends StatelessWidget {
 
                     Text(
                       price,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.blueAccent,
                         fontWeight: FontWeight.bold,
@@ -149,7 +159,7 @@ class OrderCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 12),
+          // SizedBox(height: 12),
 
           if (showTrack)
             Row(

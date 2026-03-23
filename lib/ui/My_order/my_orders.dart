@@ -1,6 +1,7 @@
 import 'package:e_commarce_kk/ui/Custom_Widget/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Controller/order_controller.dart';
 
 class MyOrders extends StatefulWidget {
   const MyOrders({super.key});
@@ -10,6 +11,15 @@ class MyOrders extends StatefulWidget {
 }
 
 class _MyOrdersState extends State<MyOrders> {
+
+  final OrderController orderController =
+  Get.put(OrderController());
+
+  @override
+  void initState() {
+    super.initState();
+    orderController.fetchOrders();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,42 +46,40 @@ class _MyOrdersState extends State<MyOrders> {
         ),
       ),
 
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-        children: [
+      body: Obx(() {
 
-          OrderCard(
-            orderId: "123",
-            image: "lib/assets/images/Man.png",
-            title: "Silk Saree",
-            subtitle: "Royal Blue",
-            price: "₹1200",
-            status: "DELIVERED",
-            showTrack: true,
-          ),
+        if (orderController.orders.isEmpty) {
+          return const Center(
+            child: Text("No Orders Found"),
+          );
+        }
 
-          OrderCard(
-            orderId: "124",
-            image: "lib/assets/images/Man.png",
-            title: "Designer Kurta",
-            subtitle: "Black • XL",
-            price: "₹1800",
-            status: "ARRIVING SOON",
-            showTrack: false,
-          ),
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+          itemCount: orderController.orders.length,
+            itemBuilder: (context, index) {
 
-          OrderCard(
-            orderId: "125",
-            image: "lib/assets/images/Man.png",
-            title: "Wedding Sherwani",
-            subtitle: "Gold • L",
-            price: "₹3500",
-            status: "IN TRANSIT",
-            showTrack: true,
-          ),
+              final order = orderController.orders[index];
 
-        ],
-      ),
+              if (order.items.isEmpty) {
+                return const SizedBox();
+              }
+
+              final product = order.items[0]; // this is Map now
+
+              return OrderCard(
+                orderId: order.id,
+                image: product['image'] ?? "",
+                title: product['name'] ?? "",
+                subtitle:
+                "${product['color'] ?? ""} • ${product['size'] ?? ""}",
+                price: "₹${order.total}",
+                status: order.status,
+                showTrack: false,
+              );
+            }
+        );
+      }),
     );
   }
 }

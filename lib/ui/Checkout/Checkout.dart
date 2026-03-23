@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Controller/address_controller.dart';
+import '../../Controller/order_controller.dart';
 import '../../models/cart_model.dart';
 
 class CheckoutScreen extends StatelessWidget {
@@ -17,6 +18,8 @@ class CheckoutScreen extends StatelessWidget {
   final addressController = Get.find<AddressController>();
 
   final PaymentController paymentController = Get.put(PaymentController());
+
+  final OrderController orderController = Get.put(OrderController());
 
   @override
   Widget build(BuildContext context) {

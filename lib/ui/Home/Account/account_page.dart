@@ -124,7 +124,7 @@ class _AccountPageState extends State<AccountPage> {
           const SizedBox(height: 10),
 
           /// PROFILE HEADER
-          const Center(child: ProfileHeader()),
+          Center(child: ProfileHeader(showEditButton: false,)),
 
           const SizedBox(height: 20),
 

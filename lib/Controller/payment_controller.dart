@@ -1,12 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class PaymentController extends GetxController{
+class PaymentController extends GetxController {
 
-  final DatabaseReference databaseReference = FirebaseDatabase.instance.ref().child("orders");
+  final DatabaseReference databaseReference =
+  FirebaseDatabase.instance.ref().child("orders");
 
   late Razorpay razorpay;
 
@@ -23,11 +22,9 @@ class PaymentController extends GetxController{
 
     razorpay = Razorpay();
 
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,paymentsuccess);
-    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,paymentfailure);
-    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,handleExternalWallet);
-
-
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, paymentsuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, paymentfailure);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
   }
 
   void openCheckout(
@@ -38,7 +35,6 @@ class PaymentController extends GetxController{
       String name,
       String email,
       ) {
-
     paidAmount = amount;
 
     selectedAddress = address;
@@ -69,6 +65,11 @@ class PaymentController extends GetxController{
 
     Get.snackbar("Payment Success", "Order Placed Successfully");
 
+    /// 🔥 CLEAR CART (IMPORTANT)
+    // Get.find<CartController>().clearCart();
+
+    /// 🔥 NAVIGATION
+    Get.offAllNamed("/home");
   }
 
   void paymentfailure(PaymentFailureResponse response) {
@@ -80,14 +81,10 @@ class PaymentController extends GetxController{
   }
 
   @override
-  void onClose(){
+  void onClose() {
     razorpay.clear();
     super.onClose();
   }
-
-
-
-
 
   Future<void> saveOrderToFirebase(String paymentId) async {
 
@@ -104,7 +101,10 @@ class PaymentController extends GetxController{
       "image": item.productModel.images.values.first.first
     }).toList();
 
-    await databaseReference.child(orderId).set({
+    await databaseReference
+        .child(userId) // 🔥 IMPORTANT CHANGE
+        .child(orderId)
+        .set({
 
       "orderId": orderId,
       "userId": userId,
@@ -115,12 +115,9 @@ class PaymentController extends GetxController{
       "paymentId": paymentId,
       "paymentMethod": "razorpay",
       "totalAmount": paidAmount,
-      "status": "placed",
+      "status": "PLACED",
       "orderTime": DateTime.now().millisecondsSinceEpoch
 
     });
-
   }
-
-
 }

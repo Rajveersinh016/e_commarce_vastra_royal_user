@@ -7,7 +7,10 @@ import 'package:image_picker/image_picker.dart';
 import '../../Controller/User_Controller.dart';
 
 class ProfileHeader extends StatefulWidget {
-  const ProfileHeader({super.key});
+
+  final bool showEditButton;
+
+  const ProfileHeader({super.key, this.showEditButton = true});
 
   @override
   State<ProfileHeader> createState() => _ProfileHeaderState();
@@ -68,28 +71,29 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               }),
             ),
 
-            GestureDetector(
-              onTap: pickImage,
-              child: Container(
-                margin: const EdgeInsets.only(right: 4, bottom: 4),
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 6,
-                    )
-                  ],
-                ),
-                child: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.white,
-                  size: 16,
+            if (widget.showEditButton)
+              GestureDetector(
+                onTap: pickImage,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 4, bottom: 4),
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                      )
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 16,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
 
@@ -130,7 +134,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             ),
           ),
         ),
-
       ],
     );
   }
